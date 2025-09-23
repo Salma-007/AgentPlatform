@@ -35,7 +35,7 @@ public class Agent extends Personne{
         this.paiements = paiements;
     }
 
-    public TypeAgent getType() {
+    public String getType() {
         return type;
     }
 
@@ -53,5 +53,17 @@ public class Agent extends Personne{
         this.type = type;
     }
 
-
+    @Override
+    public String toString() {
+        return "Agent{" +
+                "idAgent=" + idAgent +
+                ", departement=" + departement +
+                ", paiements=" + paiements +
+                ", type=" + type +
+                ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", email='" + email + '\'' +
+                ", motDePasse='" + motDePasse + '\'' +
+                '}';
+    }
 }
