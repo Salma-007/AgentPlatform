@@ -35,7 +35,7 @@ public class Agent extends Personne{
         this.paiements = paiements;
     }
 
-    public String getType() {
+    public TypeAgent getType() {
         return type;
     }
 
@@ -44,7 +44,7 @@ public class Agent extends Personne{
     }
 
 
-    Agent(String nom, String prenom, String email, String motDePasse, Departement departement, TypeAgent type) {
+    public Agent(String nom, String prenom, String email, String motDePasse, Departement departement, TypeAgent type) {
         super(nom, prenom, email, motDePasse);
         compteur++;
         this.idAgent = compteur;

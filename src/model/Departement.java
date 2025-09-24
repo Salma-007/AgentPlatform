@@ -41,8 +41,7 @@ public class Departement {
         this.idDepartement = idDepartement;
     }
 
-
-    Departement(int id, String nom, Agent responsable){
+    public Departement(String nom, Agent responsable){
         compteur++;
         this.idDepartement = compteur;
         this.nom = nom;
