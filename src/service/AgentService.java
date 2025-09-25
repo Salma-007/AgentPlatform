@@ -19,4 +19,8 @@ public class AgentService {
         repo.createAgent(agent);
     }
 
+    public Agent getAgentByid(int id) throws SQLException {
+        return repo.getAgentId(id);
+    }
+
 }

@@ -53,6 +53,21 @@ public class Agent extends Personne{
         this.type = type;
     }
 
+    // overloading the constructor
+    public Agent(int id, String nom, String prenom, String email, String motDePasse, Departement departement, TypeAgent type) {
+        super(nom, prenom, email, motDePasse);
+        this.idAgent = id;
+        this.departement = departement;
+        this.type = type;
+    }
+
+    public Agent(int id, String nom, String prenom, String email, Departement departement, TypeAgent type) {
+        super(nom, prenom, email);
+        this.idAgent = id;
+        this.departement = departement;
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "Agent{" +

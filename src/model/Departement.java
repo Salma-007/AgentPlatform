@@ -41,11 +41,19 @@ public class Departement {
         this.idDepartement = idDepartement;
     }
 
-    public Departement(String nom, Agent responsable){
+    public Departement(String nom){
         compteur++;
         this.idDepartement = compteur;
         this.nom = nom;
-        this.responsable = responsable;
         this.agents = new ArrayList<>();
+    }
+
+    public Departement(int id, String nom){
+        this.idDepartement = id;
+        this.nom = nom;
+    }
+
+    public Departement(int id){
+        this.idDepartement = id;
     }
 }

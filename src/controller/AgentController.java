@@ -15,10 +15,17 @@ public class AgentController {
         this.service = service;
     }
 
+
     public void addAgent(String nom, String prenom, String email, String motDePasse, Departement departement, TypeAgent type) throws SQLException {
         Agent agent = new Agent(nom, prenom, email, motDePasse, departement ,type);
         service.createAgent(agent);
         System.out.println("Agent ajouté : " + agent.getNom());
+    }
+
+    public Agent getAgentId(int id) throws SQLException {
+        Agent agentId = service.getAgentByid(id);
+        System.out.println("id: "+agentId.getIdAgent()+" nom : "+agentId.getNom()+" depart : "+agentId.getDepartement().getNom());
+        return agentId;
     }
 }
 

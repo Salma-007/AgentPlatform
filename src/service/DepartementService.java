@@ -5,14 +5,22 @@ import model.Agent;
 import model.Departement;
 import repository.DepartementRepository;
 
-public class DepartementService implements DepartementDAO {
-    public DepartementService(DepartementRepository departementRepository) {
+import java.sql.SQLException;
+
+public class DepartementService {
+    private DepartementRepository repo;
+
+    public DepartementService(DepartementRepository departementRepository){
+        this.repo = departementRepository;
     }
 
-    @Override
-    public String createDepartement(String nom, Agent responsable) {
-        String createDepartement = new DepartementRepository().createDepartement(new Departement(nom, responsable));
-        System.out.println("Department created succefully!");
-        return "";
+    public void createDepartement(Departement departement) throws SQLException {
+        repo.createDepartement(departement);
     }
+
+    public Departement getDepartementbyId(int id){
+        return repo.getDepartementById(id);
+    }
+
+
 }

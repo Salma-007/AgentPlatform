@@ -1,4 +1,5 @@
 import DAO.AgentDAO;
+import DAO.DepartementDAO;
 import com.sun.jdi.connect.spi.Connection;
 import config.DatabaseConnection;
 import controller.*;
@@ -19,9 +20,20 @@ public class Main {
         AgentService agentservice = new AgentService(agentrepo);
         AgentController agentController = new AgentController(agentservice);
 
-        agentController.addAgent("soum", "salima", "s@gmail.com", "123456", new Departement("reseau", null),TypeAgent.ouvrier);
+        agentController.getAgentId(1);
+//
+//        agentController.addAgent("soum", "salima", "s@gmail.com", "123456", new Departement("reseau"),TypeAgent.ouvrier);
 
-//        Departement dep = new Departement("IA", agent1);
+        IDepartementDAO depDAO = new DepartementDAO();
+        DepartementRepository departementRepository = new DepartementRepository((DepartementDAO) depDAO);
+        DepartementService departementService = new DepartementService(departementRepository);
+        DepartementController departementController = new DepartementController(departementService);
+
+//        departementController.addDepartement("dep1");
+//        departementController.getDepId(2);
+
+
+
 
 
     }

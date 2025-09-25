@@ -16,6 +16,10 @@ public class AgentRepository {
     }
 
     public void createAgent(Agent agent) throws SQLException{
-        dao.saveAgent(agent);
+        dao.save(agent);
+    }
+
+    public Agent getAgentId(int id){
+        return dao.findById(id);
     }
 }

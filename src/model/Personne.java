@@ -46,5 +46,11 @@ public abstract class Personne {
         this.motDePasse = motDePasse;
     }
 
+    Personne (String nom, String prenom, String email){
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+    }
+
 
 }
