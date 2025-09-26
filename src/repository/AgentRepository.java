@@ -34,4 +34,8 @@ public class AgentRepository {
         return dao.findByName(nom);
     }
 
+    public void updateAgent(Agent agent){
+        dao.update(agent);
+    }
+
 }

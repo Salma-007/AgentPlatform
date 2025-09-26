@@ -25,18 +25,14 @@ public class Main {
         AgentService agentservice = new AgentService(agentrepo, departementRepository);
         AgentController agentController = new AgentController(agentservice);
 
-        agentController.getAgentId(1);
+//        agentController.getAgentId(1);
 
-//        agentController.addAgent("sami", "hamza", "ham@gmail.com", "1234", new Departement("dep1"),TypeAgent.STAGIAIRE);
+//        agentController.addAgent("resp", "amir", "amir@gmail.com", "1234", new Departement("IT"),TypeAgent.RESPONSABLE_DEPARTEMENT);
 
-        agentController.agentsList();
-
-
-
-
+//        agentController.agentsList();
 
 //        departementController.addDepartement("dep1");
-//        departementController.getDepId(2);
+        departementController.getDepId(1);
 
 
 

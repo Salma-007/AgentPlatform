@@ -37,4 +37,8 @@ public class AgentService {
     public List<Agent> retrieveAgents(){
         return repo.getAgents();
     }
+
+    public void modifierAgent(Agent agent){
+        repo.updateAgent(agent);
+    }
 }

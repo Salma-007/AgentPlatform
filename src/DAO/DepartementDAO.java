@@ -36,7 +36,11 @@ public class DepartementDAO implements IDepartementDAO {
 
     @Override
     public Departement findById(int id) {
-        String querySQL = "SELECT * FROM departement WHERE id = ?";
+        String querySQL = "select departement.id , departement.nom as nom, agent.id, agent.email ,agent.prenom as prenom, agent.nom as responsable\n" +
+                            "from departement\n" +
+                            "JOIN agent \n" +
+                            "ON departement.id = agent.idDepartement\n" +
+                            "WHERE departement.id = ? and agent.typeAgent = 'RESPONSABLE_DEPARTEMENT'";
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(querySQL);){
 
@@ -44,7 +48,8 @@ public class DepartementDAO implements IDepartementDAO {
             ResultSet resultSet = statement.executeQuery();
 
             if(resultSet.next()){
-                return new Departement(resultSet.getInt("id"), resultSet.getString("nom"));
+                Agent depResponsable = new Agent(resultSet.getInt("agent.id"), resultSet.getString("responsable"), resultSet.getString("prenom"), resultSet.getString("agent.email"));
+                return new Departement(resultSet.getInt("id"), resultSet.getString("nom"), depResponsable);
             }
 
         }catch (Exception e){
@@ -125,4 +130,5 @@ public class DepartementDAO implements IDepartementDAO {
         }
         return null;
     }
+
 }

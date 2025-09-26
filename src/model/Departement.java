@@ -7,6 +7,13 @@ public class Departement {
     private int idDepartement;
     private String nom;
     private Agent responsable;
+
+    public Departement(int idDepartement, String nom, Agent responsable) {
+        this.idDepartement = idDepartement;
+        this.nom = nom;
+        this.responsable = responsable;
+    }
+
     private ArrayList<Agent> agents;
 
     public ArrayList<Agent> getAgents() {

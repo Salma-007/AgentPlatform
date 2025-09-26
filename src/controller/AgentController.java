@@ -28,7 +28,7 @@ public class AgentController {
     public Agent getAgentId(int id) throws Exception {
         Validator.validId(id, "id");
         Agent agentId = service.getAgentByid(id);
-        System.out.println("id: "+agentId.getIdAgent()+" nom : "+agentId.getNom()+" depart : "+agentId.getDepartement().getNom());
+        System.out.println(" nom : "+agentId.getPrenom()+" prenom: "+agentId.getPrenom()+" email: "+agentId.getEmail()+" departement: "+agentId.getDepartement().getNom());
         return agentId;
     }
 
@@ -37,9 +37,14 @@ public class AgentController {
         agents = service.retrieveAgents();
 
         for(Agent i : agents){
-            System.out.println(i);
+            System.out.println("id: "+i.getIdAgent()+" nom : "+i.getPrenom()+" prenom: "+i.getPrenom()+" email: "+i.getEmail()+" departement: "+i.getDepartement().getNom()+" type: "+i.getType().name());
         }
 
+    }
+
+    public void modifierAgent(int id, String nom, String prenom, String email, String motDePasse, Departement departement, TypeAgent type){
+        Agent ag = new Agent(id, nom, prenom, email, motDePasse, departement, type);
+        service.modifierAgent(ag);
     }
 }
 

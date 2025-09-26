@@ -68,6 +68,10 @@ public class Agent extends Personne{
         this.type = type;
     }
 
+    public Agent(int id, String nom, String prenom, String email){
+        super(nom, prenom, email);
+        this.idAgent = id;
+    }
 
     @Override
     public String toString() {
