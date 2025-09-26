@@ -10,6 +10,8 @@ import model.Departement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AgentDAO implements IAgentDAO {
 
@@ -61,8 +63,47 @@ public class AgentDAO implements IAgentDAO {
     }
 
     @Override
-    public Agent findById(int id) {
+    public void delete(Agent agent) {
+        String querySQL = "DELETE FROM agent WHERE id = ?";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(querySQL)) {
 
+            statement.setInt(1, agent.getIdAgent());
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("the agent was deleted successfully with name: " + agent.getNom());
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<Agent> findAll() {
+        List<Agent> agents = new ArrayList<>();
+        String querySQL = "SELECT * FROM agent";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(querySQL)) {
+            ResultSet resultSet = statement.executeQuery();
+
+            while(resultSet.next()){
+                IDepartementDAO daoDep = new DepartementDAO();
+                Departement departement = daoDep.findById(resultSet.getInt("idDepartement"));
+
+                String typeAgent = resultSet.getString("typeAgent");
+                agents.add(new Agent(resultSet.getInt("id"), resultSet.getString("nom"), resultSet.getString("prenom"), resultSet.getString("email"), departement, TypeAgent.valueOf(typeAgent)));
+            }
+            return agents;
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Agent findById(int id) {
         String querySQL = "SELECT * FROM agent WHERE id = ?";
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(querySQL);){
@@ -73,6 +114,34 @@ public class AgentDAO implements IAgentDAO {
             if(resultSet.next()){
                 int agentId = resultSet.getInt("id");
                 String nom = resultSet.getString("nom");
+                String prenom = resultSet.getString("prenom");
+                String email = resultSet.getString("email");
+                int depId = resultSet.getInt("idDepartement");
+                String typeAgent = resultSet.getString("typeAgent");
+
+                IDepartementDAO daoDep = new DepartementDAO();
+                Departement departement = daoDep.findById(depId);
+
+                return new Agent(agentId, nom, prenom, email, departement, TypeAgent.valueOf(typeAgent));
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Agent findByName(String nom) {
+        String querySQL = "SELECT * FROM agent WHERE nom = ?";
+        try(Connection connection = DatabaseConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(querySQL);){
+
+            statement.setString(1,nom);
+            ResultSet resultSet = statement.executeQuery();
+
+            if(resultSet.next()){
+                int agentId = resultSet.getInt("id");
                 String prenom = resultSet.getString("prenom");
                 String email = resultSet.getString("email");
                 int depId = resultSet.getInt("idDepartement");

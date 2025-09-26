@@ -6,6 +6,7 @@ import model.Departement;
 import repository.DepartementRepository;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class DepartementService {
     private DepartementRepository repo;
@@ -22,5 +23,12 @@ public class DepartementService {
         return repo.getDepartementById(id);
     }
 
+    public Departement getDepartementbyName(String nom){
+        return repo.getDepartementByName(nom);
+    }
+
+    public List<Departement> retrieveDepartements(){
+        return repo.getDepartements();
+    }
 
 }

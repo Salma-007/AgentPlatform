@@ -6,6 +6,8 @@ import model.Departement;
 import service.AgentService;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AgentController {
 
@@ -15,17 +17,29 @@ public class AgentController {
         this.service = service;
     }
 
-
-    public void addAgent(String nom, String prenom, String email, String motDePasse, Departement departement, TypeAgent type) throws SQLException {
+    public void addAgent(String nom, String prenom, String email, String motDePasse, Departement departement, TypeAgent type) throws Exception {
         Agent agent = new Agent(nom, prenom, email, motDePasse, departement ,type);
+        Validator.notEmpty(nom, "nom");
+
         service.createAgent(agent);
         System.out.println("Agent ajouté : " + agent.getNom());
     }
 
-    public Agent getAgentId(int id) throws SQLException {
+    public Agent getAgentId(int id) throws Exception {
+        Validator.validId(id, "id");
         Agent agentId = service.getAgentByid(id);
         System.out.println("id: "+agentId.getIdAgent()+" nom : "+agentId.getNom()+" depart : "+agentId.getDepartement().getNom());
         return agentId;
+    }
+
+    public void agentsList(){
+        List<Agent> agents = new ArrayList<>();
+        agents = service.retrieveAgents();
+
+        for(Agent i : agents){
+            System.out.println(i);
+        }
+
     }
 }
 

@@ -4,6 +4,8 @@ package repository;
 import DAO.DepartementDAO;
 import model.Departement;
 
+import java.util.List;
+
 public class DepartementRepository {
         private DepartementDAO dao;
 
@@ -18,4 +20,14 @@ public class DepartementRepository {
         public Departement getDepartementById(int id){
             return dao.findById(id);
         }
+
+        public Departement getDepartementByName(String nom){
+            return dao.findByName(nom);
+        }
+
+        public List<Departement> getDepartements(){
+            return dao.findAll();
+        }
+
+
 }

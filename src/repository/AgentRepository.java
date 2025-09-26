@@ -3,10 +3,13 @@ package repository;
 import DAO.AgentDAO;
 import config.DatabaseConnection;
 import model.Agent;
+import model.Departement;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class AgentRepository {
     private AgentDAO dao;
@@ -22,4 +25,13 @@ public class AgentRepository {
     public Agent getAgentId(int id){
         return dao.findById(id);
     }
+
+    public List<Agent> getAgents(){
+        return dao.findAll();
+    }
+
+    public Agent getAgentName(String nom){
+        return dao.findByName(nom);
+    }
+
 }

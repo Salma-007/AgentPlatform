@@ -68,6 +68,7 @@ public class Agent extends Personne{
         this.type = type;
     }
 
+
     @Override
     public String toString() {
         return "Agent{" +

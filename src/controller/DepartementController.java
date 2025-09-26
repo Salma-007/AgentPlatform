@@ -4,6 +4,8 @@ import model.Departement;
 import service.DepartementService;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DepartementController {
 
@@ -23,5 +25,14 @@ public class DepartementController {
     public void getDepId(int id){
         Departement depResultat = service.getDepartementbyId(id);
         System.out.println("le departement id est: "+depResultat.getIdDepartement()+" son nom est: "+depResultat.getNom());
+    }
+
+    public void departementsList(){
+        List<Departement> deps = new ArrayList<>();
+        deps = service.retrieveDepartements();
+
+        for(Departement i: deps){
+            System.out.println("id: "+i.getIdDepartement()+" nom: "+i.getNom());
+        }
     }
 }
