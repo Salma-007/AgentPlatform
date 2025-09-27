@@ -27,14 +27,14 @@ public class Main {
 
 //        agentController.getAgentId(1);
 
-//        agentController.addAgent("resp", "amir", "amir@gmail.com", "1234", new Departement("IT"),TypeAgent.RESPONSABLE_DEPARTEMENT);
+        agentController.addAgent("sss", "ss", "han@gmail.com", "1234", new Departement("abcssd"),TypeAgent.RESPONSABLE_DEPARTEMENT);
 
 //        agentController.agentsList();
 
 //        departementController.addDepartement("dep1");
 //        departementController.getDepId(1);
 //        departementController.agentsByDepatement("abcd");
-            agentController.deleteAgent(3);
+//            agentController.deleteAgent(3);
 
 
 

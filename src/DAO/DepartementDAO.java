@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class DepartementDAO implements IDepartementDAO {
 
@@ -148,6 +149,30 @@ public class DepartementDAO implements IDepartementDAO {
             return agents;
 
         }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Departement getDepartementAndResponsable(String nom) {
+        String querySQL = "select departement.id , departement.nom as nom, agent.id as respo_id, agent.email ,agent.prenom as prenom, agent.nom as responsable\n" +
+                "from departement\n" +
+                "JOIN agent \n" +
+                "ON departement.id = agent.idDepartement\n" +
+                "WHERE departement.nom = ? and agent.typeAgent = 'RESPONSABLE_DEPARTEMENT'";
+        try(Connection connection = DatabaseConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(querySQL);){
+
+            statement.setString(1,nom);
+            ResultSet resultSet = statement.executeQuery();
+
+            if(resultSet.next()){
+                Agent depResponsable = new Agent(resultSet.getInt("respo_id"), resultSet.getString("responsable"), resultSet.getString("prenom"), resultSet.getString("agent.email"));
+                return new Departement(resultSet.getInt("id"), resultSet.getString("nom"), depResponsable);
+            }
+
+        }catch (Exception e){
             e.printStackTrace();
         }
         return null;

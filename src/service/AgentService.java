@@ -21,14 +21,23 @@ public class AgentService {
     }
 
     public void createAgent(Agent agent) throws SQLException {
-        Departement dept = deptRepo.getDepartementByName(agent.getDepartement().getNom());
-        if (dept == null) {
-            System.out.println("departement not found!");
-        }
-        agent.setDepartement(dept);
+        Departement dept = deptRepo.getDepAndRespoByName(agent.getDepartement().getNom());
 
+        if (deptRepo.getDepartementByName(agent.getDepartement().getNom()) == null) {
+            System.out.println("departement not found!");
+            return;
+        }
+
+        // Vérifier si le département a déjà un responsable
+        if (dept != null && dept.getResponsable() != null && agent.getType() == TypeAgent.RESPONSABLE_DEPARTEMENT) {
+            System.out.println("departement a déjà un responsable!");
+            return;
+        }
+
+        agent.setDepartement(deptRepo.getDepartementByName(agent.getDepartement().getNom()));
         repo.createAgent(agent);
     }
+
 
     public Agent getAgentByid(int id) throws SQLException {
         return repo.getAgentId(id);

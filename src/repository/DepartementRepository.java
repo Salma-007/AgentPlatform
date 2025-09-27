@@ -34,5 +34,9 @@ public class DepartementRepository {
             return dao.getAgentsByDepartement(dep);
         }
 
+        public Departement getDepAndRespoByName(String nom){
+            return dao.getDepartementAndResponsable(nom);
+        }
+
 
 }

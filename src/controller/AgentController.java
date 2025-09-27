@@ -22,7 +22,6 @@ public class AgentController {
         Validator.notEmpty(nom, "nom");
 
         service.createAgent(agent);
-        System.out.println("Agent ajouté : " + agent.getNom());
     }
 
     public Agent getAgentId(int id) throws Exception {

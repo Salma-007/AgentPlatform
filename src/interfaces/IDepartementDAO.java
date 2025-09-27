@@ -9,5 +9,6 @@ import java.sql.SQLException;
 public interface IDepartementDAO extends GenericDAO<Departement, Integer>{
 
     List<Agent> getAgentsByDepartement(Departement dep);
+    Departement getDepartementAndResponsable(String nom);
 
 }
