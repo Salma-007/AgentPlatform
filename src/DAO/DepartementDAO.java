@@ -131,4 +131,25 @@ public class DepartementDAO implements IDepartementDAO {
         return null;
     }
 
+    @Override
+    public List<Agent> getAgentsByDepartement(Departement dep) {
+        List<Agent> agents = new ArrayList<>();
+        String querySQL = "SELECT * FROM agent join departement on agent.idDepartement = departement.id where departement.nom = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(querySQL)) {
+
+            statement.setString(1, dep.getNom());
+            ResultSet resultSet = statement.executeQuery();
+
+            while(resultSet.next()){
+                agents.add(new Agent(resultSet.getInt("id"), resultSet.getString("nom"), resultSet.getString("prenom"), resultSet.getString("email")));
+            }
+            return agents;
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

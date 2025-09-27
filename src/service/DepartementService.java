@@ -31,4 +31,8 @@ public class DepartementService {
         return repo.getDepartements();
     }
 
+    public List<Agent> retrieveAgentsByDEpartement(Departement dep){
+        return repo.getAgentsbyDep(dep);
+    }
+
 }

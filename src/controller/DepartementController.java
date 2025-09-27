@@ -1,6 +1,8 @@
 package controller;
 
+import model.Agent;
 import model.Departement;
+import org.w3c.dom.ls.LSOutput;
 import service.DepartementService;
 
 import java.sql.SQLException;
@@ -34,4 +36,25 @@ public class DepartementController {
             System.out.println("id: "+i.getIdDepartement()+" nom: "+i.getNom());
         }
     }
+
+    public List<Agent> agentsByDepatement(String nom) {
+        Departement dep = service.getDepartementbyName(nom);
+
+        if (dep == null) {
+            System.out.println("departement invalide!");
+            return new ArrayList<>();
+        } else {
+            List<Agent> agents = service.retrieveAgentsByDEpartement(dep);
+
+            for (Agent agent : agents) {
+                System.out.println("id: " + agent.getIdAgent() +" nom : " + agent.getNom() + " " + agent.getPrenom());
+            }
+
+            if (agents.isEmpty()) {
+                System.out.println("no agents found!");
+            }
+            return agents;
+        }
+    }
+
 }

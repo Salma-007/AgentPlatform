@@ -38,4 +38,8 @@ public class AgentRepository {
         dao.update(agent);
     }
 
+    public void deleteAgent(Agent ag){
+        dao.delete(ag);
+    }
+
 }

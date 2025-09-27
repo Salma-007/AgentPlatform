@@ -2,6 +2,7 @@ package repository;
 
 
 import DAO.DepartementDAO;
+import model.Agent;
 import model.Departement;
 
 import java.util.List;
@@ -27,6 +28,10 @@ public class DepartementRepository {
 
         public List<Departement> getDepartements(){
             return dao.findAll();
+        }
+
+        public List<Agent> getAgentsbyDep(Departement dep){
+            return dao.getAgentsByDepartement(dep);
         }
 
 

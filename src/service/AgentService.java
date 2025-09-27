@@ -41,4 +41,8 @@ public class AgentService {
     public void modifierAgent(Agent agent){
         repo.updateAgent(agent);
     }
+
+    public void deleteAgent(Agent agent){
+        repo.deleteAgent(agent);
+    }
 }

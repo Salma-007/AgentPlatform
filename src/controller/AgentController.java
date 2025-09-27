@@ -46,5 +46,15 @@ public class AgentController {
         Agent ag = new Agent(id, nom, prenom, email, motDePasse, departement, type);
         service.modifierAgent(ag);
     }
+
+    // adding delete method for agent
+    public void deleteAgent(int id) throws SQLException {
+        Agent agent = service.getAgentByid(id);
+        if(agent == null){
+            System.out.println("agent not found!");
+            return;
+        }
+        service.deleteAgent(agent);
+    }
 }
 

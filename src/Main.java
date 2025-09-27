@@ -32,8 +32,9 @@ public class Main {
 //        agentController.agentsList();
 
 //        departementController.addDepartement("dep1");
-        departementController.getDepId(1);
-
+//        departementController.getDepId(1);
+//        departementController.agentsByDepatement("abcd");
+            agentController.deleteAgent(3);
 
 
 
