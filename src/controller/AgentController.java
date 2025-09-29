@@ -1,11 +1,9 @@
 package controller;
 
 import enums.TypeAgent;
-import exception.DepartementNotFoundException;
-import exception.ResponsableDejaExistantException;
 import model.Agent;
 import model.Departement;
-import service.AgentService;
+import service.AgentServiceImp;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,38 +11,35 @@ import java.util.List;
 
 public class AgentController {
 
-    private AgentService service;
+    private AgentServiceImp service;
 
-    public AgentController(AgentService service){
+    public AgentController(AgentServiceImp service){
         this.service = service;
     }
 
     public void addAgent(String nom, String prenom, String email, String motDePasse, Departement departement, TypeAgent type) throws Exception {
         Agent agent = new Agent(nom, prenom, email, motDePasse, departement ,type);
         Validator.notEmpty(nom, "nom");
+        Validator.notEmpty(prenom, "prenom");
+        Validator.validEmail(email);
         try {
-            service.createAgent(agent);
-            System.out.println("✅ Agent ajouté avec succès !");
-        } catch (ResponsableDejaExistantException e) {
-            System.out.println(e.getMessage());
-        } catch (DepartementNotFoundException e) {
-            System.out.println(e.getMessage());
+            service.ajout(agent);
+            System.out.println("Agent ajouté avec succès !");
         } catch (Exception e) {
             System.out.println("Erreur inattendue : " + e.getMessage());
         }
-
     }
 
     public Agent getAgentId(int id) throws Exception {
         Validator.validId(id, "id");
-        Agent agentId = service.getAgentByid(id);
+        Agent agentId = service.findById(id);
         System.out.println(" nom : "+agentId.getPrenom()+" prenom: "+agentId.getPrenom()+" email: "+agentId.getEmail()+" departement: "+agentId.getDepartement().getNom());
         return agentId;
     }
 
     public void agentsList(){
         List<Agent> agents = new ArrayList<>();
-        agents = service.retrieveAgents();
+        agents = service.retrieveAll();
 
         for(Agent i : agents){
             System.out.println("id: "+i.getIdAgent()+" nom : "+i.getPrenom()+" prenom: "+i.getPrenom()+" email: "+i.getEmail()+" departement: "+i.getDepartement().getNom()+" type: "+i.getType().name());
@@ -54,16 +49,16 @@ public class AgentController {
 
     public void modifierAgent(int id, String nom, String prenom, String email, String motDePasse, Departement departement, TypeAgent type){
         Agent ag = new Agent(id, nom, prenom, email, motDePasse, departement, type);
-        service.modifierAgent(ag);
+        service.modification(ag);
     }
 
     public void deleteAgent(int id) throws SQLException {
-        Agent agent = service.getAgentByid(id);
+        Agent agent = service.findById(id);
         if(agent == null){
             System.out.println("agent not found!");
             return;
         }
-        service.deleteAgent(agent);
+        service.suppression(agent);
     }
 }
 

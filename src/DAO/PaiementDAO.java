@@ -80,7 +80,7 @@ public class PaiementDAO implements IPaiementDAO {
     }
 
     @Override
-    public List findAll() {
+    public List<Paiement> findAll() {
         List<Paiement> paiements = new ArrayList<>();
         String querySQL = "SELECT * FROM paiement";
         try (Connection connection = DatabaseConnection.getConnection();
@@ -136,24 +136,4 @@ public class PaiementDAO implements IPaiementDAO {
         return null;
     }
 
-    @Override
-    public List<Paiement> getAgentPaiements(Agent agent) {
-        List<Paiement> paiements = new ArrayList<>();
-        String querySQL = "SELECT * FROM paiement join agent on agent.id = paiement.idAgent WHERE agent.id = ?";
-        try(Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(querySQL);){
-
-            statement.setInt(1,agent.getIdAgent());
-            ResultSet resultSet = statement.executeQuery();
-
-            while(resultSet.next()){
-                String typePaiement = resultSet.getString("typePaiement");
-                paiements.add(new Paiement(resultSet.getInt("id"), TypePaiement.valueOf(typePaiement), resultSet.getDouble("montant"), resultSet.getDate("date"), resultSet.getString("motif"), agent));
-            }
-            return paiements;
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return List.of();
-    }
 }

@@ -4,6 +4,7 @@ package repository;
 import DAO.DepartementDAO;
 import model.Agent;
 import model.Departement;
+import service.interfaces.DepartementService;
 
 import java.util.List;
 
@@ -38,5 +39,15 @@ public class DepartementRepository {
             return dao.getDepartementAndResponsable(nom);
         }
 
+        public void supprimerDepartement(Departement dep){
+            dao.delete(dep);
+        }
 
+        public void modifierDepartement(Departement dep){
+            dao.update(dep);
+        }
+
+        public Departement trouverDepartementResponsableByName(String name){
+            return dao.getDepartementAndResponsable(name);
+        }
 }

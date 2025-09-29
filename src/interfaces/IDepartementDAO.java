@@ -6,7 +6,7 @@ import java.util.List;
 
 import java.sql.SQLException;
 
-public interface IDepartementDAO extends GenericDAO<Departement, Integer>{
+public interface IDepartementDAO extends GenericDAO<Departement>{
 
     List<Agent> getAgentsByDepartement(Departement dep);
     Departement getDepartementAndResponsable(String nom);

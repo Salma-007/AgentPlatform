@@ -1,6 +1,5 @@
 import DAO.AgentDAO;
 import DAO.DepartementDAO;
-import com.sun.jdi.connect.spi.Connection;
 import config.DatabaseConnection;
 import controller.*;
 import enums.*;
@@ -8,8 +7,7 @@ import interfaces.*;
 import model.*;
 import repository.*;
 import service.*;
-import java.sql.SQLException;
-import java.util.List;
+import service.interfaces.PaiementService;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -17,17 +15,18 @@ public class Main {
 
         IDepartementDAO depDAO = new DepartementDAO();
         DepartementRepository departementRepository = new DepartementRepository((DepartementDAO) depDAO);
-        DepartementService departementService = new DepartementService(departementRepository);
-        DepartementController departementController = new DepartementController(departementService);
+        DepartementServiceImp departementServiceImp = new DepartementServiceImp(departementRepository);
+        DepartementController departementController = new DepartementController(departementServiceImp);
 
         IAgentDAO agentDAO = new AgentDAO();
         AgentRepository agentrepo = new AgentRepository((AgentDAO) agentDAO);
-        AgentService agentservice = new AgentService(agentrepo, departementRepository);
+        // ajout de service de paiement aussi
+        AgentServiceImp agentservice = new AgentServiceImp(agentrepo, departementRepository);
         AgentController agentController = new AgentController(agentservice);
 
 //        agentController.getAgentId(1);
 
-        agentController.addAgent("sss", "ss", "han@gmail.com", "1234", new Departement("IT"),TypeAgent.RESPONSABLE_DEPARTEMENT);
+        agentController.addAgent("kara", "amina", "ka@gmail.com", "1234", new Departement("IT"),TypeAgent.OUVRIER);
 
 //        agentController.agentsList();
 
