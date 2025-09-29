@@ -27,7 +27,7 @@ public class Main {
 
 //        agentController.getAgentId(1);
 
-        agentController.addAgent("sss", "ss", "han@gmail.com", "1234", new Departement("abcssd"),TypeAgent.RESPONSABLE_DEPARTEMENT);
+        agentController.addAgent("sss", "ss", "han@gmail.com", "1234", new Departement("IT"),TypeAgent.RESPONSABLE_DEPARTEMENT);
 
 //        agentController.agentsList();
 

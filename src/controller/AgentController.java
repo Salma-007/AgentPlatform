@@ -1,6 +1,8 @@
 package controller;
 
 import enums.TypeAgent;
+import exception.DepartementNotFoundException;
+import exception.ResponsableDejaExistantException;
 import model.Agent;
 import model.Departement;
 import service.AgentService;
@@ -20,8 +22,17 @@ public class AgentController {
     public void addAgent(String nom, String prenom, String email, String motDePasse, Departement departement, TypeAgent type) throws Exception {
         Agent agent = new Agent(nom, prenom, email, motDePasse, departement ,type);
         Validator.notEmpty(nom, "nom");
+        try {
+            service.createAgent(agent);
+            System.out.println("✅ Agent ajouté avec succès !");
+        } catch (ResponsableDejaExistantException e) {
+            System.out.println(e.getMessage());
+        } catch (DepartementNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erreur inattendue : " + e.getMessage());
+        }
 
-        service.createAgent(agent);
     }
 
     public Agent getAgentId(int id) throws Exception {
@@ -46,7 +57,6 @@ public class AgentController {
         service.modifierAgent(ag);
     }
 
-    // adding delete method for agent
     public void deleteAgent(int id) throws SQLException {
         Agent agent = service.getAgentByid(id);
         if(agent == null){

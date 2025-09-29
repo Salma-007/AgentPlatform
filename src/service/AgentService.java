@@ -2,6 +2,8 @@ package service;
 
 import enums.TypeAgent;
 import DAO.AgentDAO;
+import exception.DepartementNotFoundException;
+import exception.ResponsableDejaExistantException;
 import model.Agent;
 import model.Departement;
 import repository.AgentRepository;
@@ -20,18 +22,15 @@ public class AgentService {
         this.deptRepo = deptRepo;
     }
 
-    public void createAgent(Agent agent) throws SQLException {
+    public void createAgent(Agent agent) throws SQLException, ResponsableDejaExistantException, DepartementNotFoundException {
         Departement dept = deptRepo.getDepAndRespoByName(agent.getDepartement().getNom());
 
         if (deptRepo.getDepartementByName(agent.getDepartement().getNom()) == null) {
-            System.out.println("departement not found!");
-            return;
+            throw new DepartementNotFoundException("Département " + agent.getDepartement().getNom() + " introuvable !");
         }
 
-        // Vérifier si le département a déjà un responsable
         if (dept != null && dept.getResponsable() != null && agent.getType() == TypeAgent.RESPONSABLE_DEPARTEMENT) {
-            System.out.println("departement a déjà un responsable!");
-            return;
+            throw new ResponsableDejaExistantException("Département " + dept.getNom() + " a déjà un responsable !");
         }
 
         agent.setDepartement(deptRepo.getDepartementByName(agent.getDepartement().getNom()));

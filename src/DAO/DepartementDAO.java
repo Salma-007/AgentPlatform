@@ -5,7 +5,6 @@ import enums.TypeAgent;
 import interfaces.IDepartementDAO;
 import model.Agent;
 import model.Departement;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -73,6 +73,10 @@ public class Agent extends Personne{
         this.idAgent = id;
     }
 
+    public boolean isEligibleForBonus() {
+        return type == TypeAgent.RESPONSABLE_DEPARTEMENT || type == TypeAgent.DIRECTEUR;
+    }
+
     @Override
     public String toString() {
         return "Agent{" +
