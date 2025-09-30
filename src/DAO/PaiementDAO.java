@@ -1,13 +1,10 @@
 package DAO;
 
 import config.DatabaseConnection;
-import enums.TypeAgent;
 import enums.TypePaiement;
-import interfaces.IAgentDAO;
-import interfaces.IDepartementDAO;
-import interfaces.IPaiementDAO;
+import DAO.interfaces.IAgentDAO;
+import DAO.interfaces.IPaiementDAO;
 import model.Agent;
-import model.Departement;
 import model.Paiement;
 
 import java.sql.Connection;

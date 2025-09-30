@@ -83,7 +83,10 @@ public class PaiementServiceImp implements PaiementService {
 
     @Override
     public List<Paiement> paiementTriParType(Agent agent, String type) {
-        return paiementsByAgent(agent).stream().filter(paiement -> paiement.getType().name() == type).toList();
+        return paiementsByAgent(agent)
+                .stream()
+                .filter(paiement -> paiement.getType().name() == type)
+                .toList();
     }
 
 }

@@ -92,6 +92,12 @@ public class Paiement {
         this.typePrime = typePrime;
     }
 
+    public Paiement(double montant, String motif, TypePaiement type) throws MontantNegatifException {
+        this.montant = montant;
+        this.motif = motif;
+        this.type = type;
+    }
+
     public Paiement(double montant, String motif, Agent agent, boolean conditionValidee) throws AgentNonEligibleException, MontantNegatifException {
         this(TypePaiement.BONUS, montant, motif, agent);
         this.conditionValidee = conditionValidee;

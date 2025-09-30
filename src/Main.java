@@ -1,42 +1,55 @@
 import DAO.AgentDAO;
+import DAO.AuthenticationDAO;
 import DAO.DepartementDAO;
+import DAO.PaiementDAO;
 import config.DatabaseConnection;
 import controller.*;
 import enums.*;
-import interfaces.*;
+import DAO.interfaces.*;
 import model.*;
 import repository.*;
 import service.*;
+import service.interfaces.AgentService;
+import service.interfaces.AuthenticationService;
+import service.interfaces.DepartementService;
 import service.interfaces.PaiementService;
+import view.menuAgent;
 
 public class Main {
     public static void main(String[] args) throws Exception {
         DatabaseConnection.getConnection();
 
-        IDepartementDAO depDAO = new DepartementDAO();
-        DepartementRepository departementRepository = new DepartementRepository((DepartementDAO) depDAO);
-        DepartementServiceImp departementServiceImp = new DepartementServiceImp(departementRepository);
-        DepartementController departementController = new DepartementController(departementServiceImp);
+        AgentDAO agentDAO = new AgentDAO();
+        AuthenticationDAO authDAO = new AuthenticationDAO();
 
-        IAgentDAO agentDAO = new AgentDAO();
-        AgentRepository agentrepo = new AgentRepository((AgentDAO) agentDAO);
-        // ajout de service de paiement aussi
-        AgentServiceImp agentservice = new AgentServiceImp(agentrepo, departementRepository);
-        AgentController agentController = new AgentController(agentservice);
+        DepartementDAO departementDAO = new DepartementDAO();
 
-//        agentController.getAgentId(1);
+        PaiementDAO paiementDAO = new PaiementDAO();
 
-        agentController.addAgent("kara", "amina", "ka@gmail.com", "1234", new Departement("IT"),TypeAgent.OUVRIER);
+        // Repository Layer
+        AgentRepository agentRepo = new AgentRepository(agentDAO);
+        PaiementRepository paiementRepo = new PaiementRepository(paiementDAO);
 
-//        agentController.agentsList();
+        AuthenticationRepository authRepo = new AuthenticationRepository(authDAO);
 
-//        departementController.addDepartement("dep1");
-//        departementController.getDepId(1);
-//        departementController.agentsByDepatement("abcd");
-//            agentController.deleteAgent(3);
+        // À remplacer par vos implémentations
+        DepartementRepository deptRepo = new DepartementRepository(departementDAO);
+        PaiementService paiementService = new PaiementServiceImp(paiementRepo);
 
+        // Service Layer
+        AgentServiceImp agentService = new AgentServiceImp(agentRepo, deptRepo, paiementService);
+        AuthenticationService authService = new AuthenticationServiceImp(authRepo, agentRepo);
+        DepartementServiceImp departementService = new DepartementServiceImp(deptRepo);
 
+        // Controller Layer
+        AgentController controller = new AgentController(agentService);
+        DepartementController depcontroller = new DepartementController(departementService);
 
+        // View Layer
+        menuAgent view = new menuAgent(controller, depcontroller);
+
+        // Démarrage
+        view.start();
 
     }
 }

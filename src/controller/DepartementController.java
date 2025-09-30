@@ -56,4 +56,8 @@ public class DepartementController {
         }
     }
 
+    public Departement getDepartementbyName(String nom){
+        return service.findByName(nom);
+    }
+
 }

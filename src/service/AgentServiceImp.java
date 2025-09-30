@@ -1,6 +1,7 @@
 package service;
 
 import enums.TypeAgent;
+import exception.AgentNotFoundException;
 import exception.DepartementNotFoundException;
 import exception.ResponsableDejaExistantException;
 import model.Agent;
@@ -42,8 +43,12 @@ public class AgentServiceImp implements AgentService {
     }
 
     @Override
-    public Agent findById(int id) {
-        return repo.getAgentId(id);
+    public Agent findById(int id) throws AgentNotFoundException, SQLException {
+        Agent agent = repo.getAgentId(id);
+        if(agent == null){
+            throw new AgentNotFoundException("agent with this id not found!");
+        }
+        return agent;
     }
 
     @Override

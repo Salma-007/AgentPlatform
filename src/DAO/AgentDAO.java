@@ -2,14 +2,17 @@ package DAO;
 
 import config.DatabaseConnection;
 import enums.TypeAgent;
-import interfaces.IAgentDAO;
-import interfaces.IDepartementDAO;
+import DAO.interfaces.IAgentDAO;
+import DAO.interfaces.IDepartementDAO;
+import enums.TypePaiement;
 import model.Agent;
 import model.Departement;
+import model.Paiement;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -159,4 +162,24 @@ public class AgentDAO implements IAgentDAO {
         return null;
     }
 
+    @Override
+    public List<Paiement> retrieveAllPaiemenst(Agent agent) {
+        List<Paiement> paiements = new ArrayList<>();
+        String querySQL = "SELECT * FROM paiement join agent on agent.id = paiement.idAgent where agent.id = ?";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(querySQL)) {
+
+            statement.setInt(1, agent.getIdAgent());
+            ResultSet resultSet = statement.executeQuery();
+
+            while(resultSet.next()){
+                paiements.add(new Paiement(resultSet.getDouble("montant"), resultSet.getString("motif"), TypePaiement.valueOf(resultSet.getString("typePaiement"))));
+            }
+            return paiements;
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

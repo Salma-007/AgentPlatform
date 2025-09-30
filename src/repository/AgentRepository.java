@@ -22,7 +22,7 @@ public class AgentRepository {
         dao.save(agent);
     }
 
-    public Agent getAgentId(int id){
+    public Agent getAgentId(int id) throws SQLException{
         return dao.findById(id);
     }
 
@@ -40,6 +40,10 @@ public class AgentRepository {
 
     public void deleteAgent(Agent ag){
         dao.delete(ag);
+    }
+
+    public String getInformations(){
+        return dao.toString();
     }
 
 }

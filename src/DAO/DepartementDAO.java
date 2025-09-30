@@ -1,17 +1,14 @@
 package DAO;
 
 import config.DatabaseConnection;
-import enums.TypeAgent;
-import interfaces.IDepartementDAO;
+import DAO.interfaces.IDepartementDAO;
 import model.Agent;
 import model.Departement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 public class DepartementDAO implements IDepartementDAO {
 
@@ -40,7 +37,7 @@ public class DepartementDAO implements IDepartementDAO {
                             "from departement\n" +
                             "JOIN agent \n" +
                             "ON departement.id = agent.idDepartement\n" +
-                            "WHERE departement.id = ? and agent.typeAgent = 'RESPONSABLE_DEPARTEMENT'";
+                            "WHERE departement.id = ? ";
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(querySQL);){
 

@@ -87,7 +87,6 @@ public class Agent extends Personne{
                 ", nom='" + nom + '\'' +
                 ", prenom='" + prenom + '\'' +
                 ", email='" + email + '\'' +
-                ", motDePasse='" + motDePasse + '\'' +
                 '}';
     }
 }

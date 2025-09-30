@@ -1,6 +1,7 @@
 package controller;
 
 import enums.TypeAgent;
+import exception.AgentNotFoundException;
 import model.Agent;
 import model.Departement;
 import service.AgentServiceImp;
@@ -31,20 +32,28 @@ public class AgentController {
     }
 
     public Agent getAgentId(int id) throws Exception {
-        Validator.validId(id, "id");
-        Agent agentId = service.findById(id);
-        System.out.println(" nom : "+agentId.getPrenom()+" prenom: "+agentId.getPrenom()+" email: "+agentId.getEmail()+" departement: "+agentId.getDepartement().getNom());
-        return agentId;
+        try {
+            Validator.validId(id, "id");
+            Agent agentId = service.findById(id);
+            System.out.println(" nom : " + agentId.getNom() +
+                    " prenom: " + agentId.getPrenom() +
+                    " email: " + agentId.getEmail() +
+                    " departement: " + agentId.getDepartement().getNom());
+            return agentId;
+        } catch (AgentNotFoundException e) {
+            System.out.println("⚠️ " + e.getMessage());
+        }
+        return null;
     }
 
-    public void agentsList(){
+    public List<Agent> agentsList(){
         List<Agent> agents = new ArrayList<>();
         agents = service.retrieveAll();
 
         for(Agent i : agents){
             System.out.println("id: "+i.getIdAgent()+" nom : "+i.getPrenom()+" prenom: "+i.getPrenom()+" email: "+i.getEmail()+" departement: "+i.getDepartement().getNom()+" type: "+i.getType().name());
         }
-
+        return agents;
     }
 
     public void modifierAgent(int id, String nom, String prenom, String email, String motDePasse, Departement departement, TypeAgent type){
@@ -59,6 +68,14 @@ public class AgentController {
             return;
         }
         service.suppression(agent);
+    }
+
+    public Agent getAgentByName(String nom){
+        return service.findByName(nom);
+    }
+
+    public double getTotalByAgent(Agent agent){
+        return service.getTotalPayments(agent);
     }
 }
 
