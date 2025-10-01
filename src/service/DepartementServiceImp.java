@@ -1,5 +1,6 @@
 package service;
 
+import exception.DepartementNotFoundException;
 import model.Agent;
 import model.Departement;
 import repository.DepartementRepository;
@@ -7,6 +8,7 @@ import service.interfaces.DepartementService;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class DepartementServiceImp implements DepartementService {
     private DepartementRepository repo;
@@ -36,8 +38,9 @@ public class DepartementServiceImp implements DepartementService {
     }
 
     @Override
-    public Departement findById(int id) {
-        return repo.getDepartementById(id);
+    public Departement findById(int id) throws DepartementNotFoundException {
+        Optional<Departement> departement = repo.getDepartementById(id);
+        return departement.orElseThrow(()-> new DepartementNotFoundException("department not found!"));
     }
 
     @Override

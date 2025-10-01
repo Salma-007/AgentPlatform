@@ -32,9 +32,8 @@ public class Main {
 
         AuthenticationRepository authRepo = new AuthenticationRepository(authDAO);
 
-        // À remplacer par vos implémentations
         DepartementRepository deptRepo = new DepartementRepository(departementDAO);
-        PaiementService paiementService = new PaiementServiceImp(paiementRepo);
+        PaiementServiceImp paiementService = new PaiementServiceImp(paiementRepo, agentRepo);
 
         // Service Layer
         AgentServiceImp agentService = new AgentServiceImp(agentRepo, deptRepo, paiementService);
@@ -42,11 +41,12 @@ public class Main {
         DepartementServiceImp departementService = new DepartementServiceImp(deptRepo);
 
         // Controller Layer
+        PaiementController paiementController = new PaiementController(paiementService);
         AgentController controller = new AgentController(agentService);
         DepartementController depcontroller = new DepartementController(departementService);
 
         // View Layer
-        menuAgent view = new menuAgent(controller, depcontroller);
+        menuAgent view = new menuAgent(controller, depcontroller,paiementController);
 
         // Démarrage
         view.start();

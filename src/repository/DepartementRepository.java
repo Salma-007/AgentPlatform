@@ -7,6 +7,7 @@ import model.Departement;
 import service.interfaces.DepartementService;
 
 import java.util.List;
+import java.util.Optional;
 
 public class DepartementRepository {
         private DepartementDAO dao;
@@ -19,7 +20,7 @@ public class DepartementRepository {
             dao.save(dep);
         }
 
-        public Departement getDepartementById(int id){
+        public Optional<Departement> getDepartementById(int id){
             return dao.findById(id);
         }
 

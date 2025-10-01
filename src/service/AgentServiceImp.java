@@ -14,6 +14,7 @@ import service.interfaces.PaiementService;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class AgentServiceImp implements AgentService {
 
@@ -44,11 +45,8 @@ public class AgentServiceImp implements AgentService {
 
     @Override
     public Agent findById(int id) throws AgentNotFoundException, SQLException {
-        Agent agent = repo.getAgentId(id);
-        if(agent == null){
-            throw new AgentNotFoundException("agent with this id not found!");
-        }
-        return agent;
+        Optional<Agent> agent = repo.getAgentId(id);
+        return agent.orElseThrow(() -> new AgentNotFoundException("agent with this id not found!") );
     }
 
     @Override
@@ -67,7 +65,6 @@ public class AgentServiceImp implements AgentService {
                 throw new RuntimeException(e);
             }
         }
-
         if (dept != null && dept.getResponsable() != null && agent.getType() == TypeAgent.RESPONSABLE_DEPARTEMENT) {
             try {
                 throw new ResponsableDejaExistantException("Département " + dept.getNom() + " a déjà un responsable !");

@@ -5,6 +5,7 @@ import model.Agent;
 import model.Paiement;
 
 import java.util.List;
+import java.util.Optional;
 
 public class PaiementRepository {
     private PaiementDAO dao;
@@ -29,7 +30,7 @@ public class PaiementRepository {
         return dao.findAll();
     }
 
-    public Paiement getPaiementById(int id){
+    public Optional<Paiement> getPaiementById(int id){
         return dao.findById(id);
     }
 

@@ -4,6 +4,7 @@ import config.DatabaseConnection;
 import enums.TypePaiement;
 import DAO.interfaces.IAgentDAO;
 import DAO.interfaces.IPaiementDAO;
+import exception.AgentNotFoundException;
 import model.Agent;
 import model.Paiement;
 
@@ -13,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class PaiementDAO implements IPaiementDAO {
     @Override
@@ -23,7 +25,7 @@ public class PaiementDAO implements IPaiementDAO {
 
             statement.setString(1, paiement.getType().name());
             statement.setDouble(2, paiement.getMontant());
-            statement.setDate(3, (Date) paiement.getDate());
+            statement.setDate(3,  new java.sql.Date(paiement.getDate().getTime()));
             statement.setString(4, paiement.getMotif());
             statement.setInt(5, paiement.getAgent().getIdAgent());
 
@@ -86,7 +88,11 @@ public class PaiementDAO implements IPaiementDAO {
 
             while(resultSet.next()){
                 IAgentDAO agentDAO = new AgentDAO();
-                Agent agent = agentDAO.findById(resultSet.getInt("idAgent"));
+                Optional<Agent> agentOpt = agentDAO.findById(resultSet.getInt("idAgent"));
+                if(!agentOpt.isPresent()){
+                    throw new AgentNotFoundException("agent not found!");
+                }
+                Agent agent = agentOpt.get();
                 String typePaiement = resultSet.getString("typePaiement");
 
                 paiements.add(new Paiement(resultSet.getInt("id"), TypePaiement.valueOf(typePaiement), resultSet.getDouble("montant"), resultSet.getDate("date"), resultSet.getString("motif"), agent));
@@ -100,7 +106,7 @@ public class PaiementDAO implements IPaiementDAO {
     }
 
     @Override
-    public Paiement findById(int id) {
+    public Optional<Paiement> findById(int id) {
         String querySQL = "SELECT * FROM paiement WHERE id = ?";
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(querySQL);){
@@ -117,15 +123,16 @@ public class PaiementDAO implements IPaiementDAO {
                 int agentId = resultSet.getInt("idAgent");
 
                 IAgentDAO agentDAO = new AgentDAO();
-                Agent agent = agentDAO.findById(agentId);
+                Optional<Agent> agentOpt = agentDAO.findById(agentId);
+                Agent agent = agentOpt.get();
 
-                return new Paiement(idPaiement, TypePaiement.valueOf(type), montant, date, motif, agent);
+                return Optional.of(new Paiement(idPaiement, TypePaiement.valueOf(type), montant, date, motif, agent));
             }
 
         }catch (Exception e){
             e.printStackTrace();
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override

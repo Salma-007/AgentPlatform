@@ -9,6 +9,7 @@ import service.AgentServiceImp;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class AgentController {
 
@@ -31,7 +32,7 @@ public class AgentController {
         }
     }
 
-    public Agent getAgentId(int id) throws Exception {
+    public Optional<Agent> getAgentId(int id) throws Exception {
         try {
             Validator.validId(id, "id");
             Agent agentId = service.findById(id);
@@ -39,11 +40,11 @@ public class AgentController {
                     " prenom: " + agentId.getPrenom() +
                     " email: " + agentId.getEmail() +
                     " departement: " + agentId.getDepartement().getNom());
-            return agentId;
+            return Optional.of(agentId);
         } catch (AgentNotFoundException e) {
             System.out.println("⚠️ " + e.getMessage());
         }
-        return null;
+        return Optional.empty();
     }
 
     public List<Agent> agentsList(){

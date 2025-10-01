@@ -5,6 +5,7 @@ import enums.TypeAgent;
 import DAO.interfaces.IAgentDAO;
 import DAO.interfaces.IDepartementDAO;
 import enums.TypePaiement;
+import exception.DepartementNotFoundException;
 import model.Agent;
 import model.Departement;
 import model.Paiement;
@@ -15,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class AgentDAO implements IAgentDAO {
 
@@ -92,8 +94,11 @@ public class AgentDAO implements IAgentDAO {
 
             while(resultSet.next()){
                 IDepartementDAO daoDep = new DepartementDAO();
-                Departement departement = daoDep.findById(resultSet.getInt("idDepartement"));
-
+                Optional<Departement> departementOpt = daoDep.findById(resultSet.getInt("idDepartement"));
+                if(!departementOpt.isPresent()){
+                    throw new DepartementNotFoundException("Department not found!");
+                }
+                Departement departement = departementOpt.get();
                 String typeAgent = resultSet.getString("typeAgent");
                 agents.add(new Agent(resultSet.getInt("id"), resultSet.getString("nom"), resultSet.getString("prenom"), resultSet.getString("email"), departement, TypeAgent.valueOf(typeAgent)));
             }
@@ -106,7 +111,7 @@ public class AgentDAO implements IAgentDAO {
     }
 
     @Override
-    public Agent findById(int id) {
+    public Optional<Agent> findById(int id) {
         String querySQL = "SELECT * FROM agent WHERE id = ?";
         try(Connection connection = DatabaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(querySQL);){
@@ -123,15 +128,19 @@ public class AgentDAO implements IAgentDAO {
                 String typeAgent = resultSet.getString("typeAgent");
 
                 IDepartementDAO daoDep = new DepartementDAO();
-                Departement departement = daoDep.findById(depId);
+                Optional<Departement> departementOpt = daoDep.findById(resultSet.getInt("idDepartement"));
+                if(!departementOpt.isPresent()){
+                    throw new DepartementNotFoundException("Department not found!");
+                }
+                Departement departement = departementOpt.get();
 
-                return new Agent(agentId, nom, prenom, email, departement, TypeAgent.valueOf(typeAgent));
+                return Optional.of(new Agent(agentId, nom, prenom, email, departement, TypeAgent.valueOf(typeAgent)));
             }
 
         }catch (Exception e){
             e.printStackTrace();
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -151,7 +160,11 @@ public class AgentDAO implements IAgentDAO {
                 String typeAgent = resultSet.getString("typeAgent");
 
                 IDepartementDAO daoDep = new DepartementDAO();
-                Departement departement = daoDep.findById(depId);
+                Optional<Departement> departementOpt = daoDep.findById(resultSet.getInt("idDepartement"));
+                if(!departementOpt.isPresent()){
+                    throw new DepartementNotFoundException("Department not found!");
+                }
+                Departement departement = departementOpt.get();
 
                 return new Agent(agentId, nom, prenom, email, departement, TypeAgent.valueOf(typeAgent));
             }

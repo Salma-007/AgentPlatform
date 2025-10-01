@@ -1,5 +1,6 @@
 package controller;
 
+import exception.DepartementNotFoundException;
 import model.Agent;
 import model.Departement;
 import service.DepartementServiceImp;
@@ -7,6 +8,7 @@ import service.DepartementServiceImp;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class DepartementController {
 
@@ -22,9 +24,10 @@ public class DepartementController {
         System.out.println("departement ajouté : " + dep.getNom());
     }
 
-    public void getDepId(int id){
+    public Optional<Departement> getDepId(int id) throws DepartementNotFoundException {
         Departement depResultat = service.findById(id);
         System.out.println(" le departement id est: "+depResultat.getIdDepartement()+" son nom est: "+depResultat.getNom()+ " le responsable est: "+depResultat.getResponsable().getNom()+" "+depResultat.getResponsable().getPrenom());
+        return Optional.of(depResultat);
     }
 
     public void departementsList(){

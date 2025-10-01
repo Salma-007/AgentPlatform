@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class AgentRepository {
     private AgentDAO dao;
@@ -22,7 +23,7 @@ public class AgentRepository {
         dao.save(agent);
     }
 
-    public Agent getAgentId(int id) throws SQLException{
+    public Optional<Agent> getAgentId(int id) throws SQLException{
         return dao.findById(id);
     }
 

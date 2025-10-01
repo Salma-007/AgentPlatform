@@ -1,23 +1,28 @@
 package view;
 import controller.AgentController;
 import controller.DepartementController;
+import controller.PaiementController;
 import enums.TypeAgent;
+import enums.TypePaiement;
 import model.Agent;
 import model.Departement;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class menuAgent {
     private Scanner scanner;
     private AgentController controller;
     private DepartementController depcontroller;
+    private PaiementController paiementcontroller;
 
-    public menuAgent(AgentController controller, DepartementController dep) {
+    public menuAgent(AgentController controller, DepartementController dep, PaiementController paiement) {
         this.scanner = new Scanner(System.in);
         this.controller = controller;
         this.depcontroller = dep;
+        this.paiementcontroller = paiement;
     }
 
     public void start() throws Exception {
@@ -44,7 +49,8 @@ public class menuAgent {
             System.out.println("  5. Rechercher un agent par ID");
             System.out.println("  6. Rechercher un agent par nom");
             System.out.println("  7. Afficher total paiements d'un agent");
-            System.out.println("  8. Mon profil");
+            System.out.println("  8. ajouter un paiement pour un agent");
+            System.out.println("  9. Mon profil");
             System.out.println("  0. Quitter");
             System.out.println("─────────────────────────────────────────");
             System.out.print("Votre choix: ");
@@ -72,6 +78,9 @@ public class menuAgent {
                     break;
                 case "7":
                     showTotalPaymentsView();
+                    break;
+                case "8":
+                    showAddPaiementView();
                     break;
 //                case "8":
 //                    showProfileView();
@@ -134,12 +143,14 @@ public class menuAgent {
 
         try {
             int id = Integer.parseInt(scanner.nextLine().trim());
-            Agent agent = controller.getAgentId(id);
+            Optional<Agent> agentOpt = controller.getAgentId(id);
 
-            if (agent == null) {
-                System.out.println("\n✗ Agent introuvable!");
+            if (!agentOpt.isPresent()) {
+                System.out.println("\n Agent introuvable!");
                 return;
             }
+
+            Agent agent = agentOpt.get();
 
             System.out.println("\nAgent: " + agent.getPrenom() + " " + agent.getNom());
             System.out.println("(Laissez vide pour conserver)\n");
@@ -209,13 +220,17 @@ public class menuAgent {
 
         try {
             int id = Integer.parseInt(scanner.nextLine().trim());
-            Agent agent = controller.getAgentId(id);
+            if(id <= 0){
+                System.out.println("entrez un id valide svp!");
+                return;
+            }
+            Optional<Agent> agentOpt = controller.getAgentId(id);
 
-            if (agent == null) {
+            if (!agentOpt.isPresent()) {
                 System.out.println("\n");
             } else {
                 System.out.println();
-                displayAgentCard(agent);
+                displayAgentCard(agentOpt.get());
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -243,11 +258,12 @@ public class menuAgent {
 
         try {
             int id = Integer.parseInt(scanner.nextLine().trim());
-            Agent agent = controller.getAgentId(id);
+            Optional<Agent> agentOpt = controller.getAgentId(id);
 
-            if (agent == null) {
+            if (!agentOpt.isPresent()) {
                 System.out.println("\n Agent introuvable!");
             } else {
+                Agent agent = agentOpt.get();
                 Double total = controller.getTotalByAgent(agent);
                 System.out.println("\nAgent: " + agent.getPrenom() + " " + agent.getNom());
                 System.out.println("Total paiements: " + String.format("%.2f DH", total));
@@ -281,13 +297,13 @@ public class menuAgent {
 
         try {
             int id = Integer.parseInt(scanner.nextLine().trim());
-            Agent agent = controller.getAgentId(id);
+            Optional<Agent> agentOpt = controller.getAgentId(id);
 
-            if (agent == null) {
+            if (!agentOpt.isPresent()) {
                 System.out.println("\n Agent introuvable!");
                 return;
             }
-
+            Agent agent = agentOpt.get();
             System.out.println("\nAgent: " + agent.getPrenom() + " " + agent.getNom());
             System.out.print("Confirmer la suppression? (oui/non): ");
             String confirm = scanner.nextLine().trim();
@@ -306,4 +322,53 @@ public class menuAgent {
             throw new RuntimeException(e);
         }
     }
+
+    // le montant négatif
+    private void showAddPaiementView() {
+        System.out.println("AJOUTER UN PAIEMENT \n");
+        try {
+            System.out.print("ID de l'agent: ");
+            int id = Integer.parseInt(scanner.nextLine().trim());
+
+            Optional<Agent> agentOPt = controller.getAgentId(id);
+            if (!agentOPt.isPresent()) {
+                System.out.println("✗ Agent introuvable!");
+                return;
+            }
+            Agent agent = agentOPt.get();
+            System.out.println("Types de paiement:");
+            System.out.println("  1. SALAIRE");
+            System.out.println("  2. PRIME");
+            System.out.println("  3. BONUS");
+            System.out.println("  4. INDEMNITE");
+            System.out.print("Choisissez (1-4): ");
+            String choixType = scanner.nextLine().trim();
+
+            TypePaiement type;
+            switch (choixType) {
+                case "1": type = TypePaiement.SALAIRE; break;
+                case "2": type = TypePaiement.PRIME; break;
+                case "3": type = TypePaiement.BONUS; break;
+                case "4": type = TypePaiement.INDEMNITE; break;
+                default:
+                    System.out.println("Type invalide, SALAIRE par défaut.");
+                    type = TypePaiement.SALAIRE;
+            }
+
+            System.out.print("Montant: ");
+            double montant = Double.parseDouble(scanner.nextLine().trim());
+
+            System.out.print("Motif: ");
+            String motif = scanner.nextLine().trim();
+
+            paiementcontroller.ajouterPaiement(type, montant, motif, agent);
+            System.out.println("Paiement ajouté avec succès!");
+
+        } catch (NumberFormatException e) {
+            System.out.println("Entrée invalide !");
+        } catch (Exception e) {
+            System.out.println("Erreur: " + e.getMessage());
+        }
+    }
+
 }

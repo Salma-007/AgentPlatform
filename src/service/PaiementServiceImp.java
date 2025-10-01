@@ -1,28 +1,36 @@
 package service;
 
 import enums.TypePaiement;
+import exception.AgentNotFoundException;
 import model.Agent;
 import model.Departement;
 import model.Paiement;
+import repository.AgentRepository;
 import repository.PaiementRepository;
 import service.interfaces.PaiementService;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.sql.SQLException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PaiementServiceImp implements PaiementService {
 
     private PaiementRepository repo;
+    private AgentRepository agentrepo;
 
-    public PaiementServiceImp(PaiementRepository paiementRepository){
+    public PaiementServiceImp(PaiementRepository paiementRepository, AgentRepository repo){
         this.repo = paiementRepository;
+        this.agentrepo = repo;
     }
 
     @Override
-    public void ajout(Paiement paiement) {
+    public void ajout(Paiement paiement) throws AgentNotFoundException, SQLException {
+        Optional<Agent> agentOpt = agentrepo.getAgentId(paiement.getAgent().getIdAgent());
+
+        if(!agentOpt.isPresent()){
+            throw new AgentNotFoundException("agent with this id not found!");
+        }
+        Agent agent = agentOpt.get();
         repo.createPaiement(paiement);
     }
 
@@ -43,7 +51,8 @@ public class PaiementServiceImp implements PaiementService {
 
     @Override
     public Paiement findById(int id) {
-        return repo.getPaiementById(id);
+        Optional<Paiement> paiement = repo.getPaiementById(id);
+        return paiement.orElseThrow(()-> new RuntimeException("ppayment not found!"));
     }
 
     @Override

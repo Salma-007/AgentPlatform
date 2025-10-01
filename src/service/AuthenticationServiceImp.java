@@ -6,6 +6,7 @@ import repository.AuthenticationRepository;
 import service.interfaces.AuthenticationService;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class AuthenticationServiceImp implements AuthenticationService {
 
@@ -22,7 +23,8 @@ public class AuthenticationServiceImp implements AuthenticationService {
         int agentId = authRepo.authenticateAgent(email, mdp);
 
         if (agentId != -1) {
-            return agentRepo.getAgentId(agentId);
+            Optional<Agent> agentOptional = agentRepo.getAgentId(agentId);
+            return agentOptional.get();
         }
 
         return null;

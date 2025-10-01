@@ -70,7 +70,7 @@ public class Paiement {
     }
 
 
-    Paiement(TypePaiement type, double montant, String motif, Agent agent) throws MontantNegatifException {
+    public Paiement(TypePaiement type, double montant, String motif, Agent agent) throws MontantNegatifException {
         Paiement.compteur++;
         this.idPaiement = Paiement.compteur;
         this.type = type;
