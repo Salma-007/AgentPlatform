@@ -5,6 +5,7 @@ import model.Agent;
 import model.Departement;
 import model.Paiement;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface PaiementService extends ServiceInterface<Paiement>{
@@ -13,4 +14,6 @@ public interface PaiementService extends ServiceInterface<Paiement>{
     List<Paiement> paiementTriParMontant(Agent agent);
     List<Paiement> paiementTriParDate(Agent agent);
     List<Paiement> paiementTriParType(Agent agent, String type);
+    void addPaiement(Paiement paiement, Agent agent) throws SQLException;
+    boolean peutAjouterPaiement(Agent agentAuth, Agent agentCible, TypePaiement type);
 }

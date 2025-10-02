@@ -12,14 +12,23 @@ import java.util.List;
 
 public class PaiementController {
     private PaiementServiceImp service ;
+    private Agent currentAgent;
 
     public PaiementController(PaiementServiceImp service){
         this.service = service;
     }
 
-    public void ajouterPaiement(TypePaiement type, double montant, String motif, Agent agent) throws SQLException, MontantNegatifException {
+    public void setCurrentAgent(Agent agent) {
+        this.currentAgent = agent;
+    }
+
+    public Agent getCurrentAgent() {
+        return currentAgent;
+    }
+
+    public void ajouterPaiement(TypePaiement type, double montant, String motif, Agent agent, Agent agentCible) throws SQLException, MontantNegatifException {
         Paiement p = new Paiement(type, montant, motif, agent);
-        service.ajout(p);
+        service.addPaiement(p, agentCible);
     }
 
     public List<Paiement> retrievePaiementsPerAgent(Agent agent){

@@ -25,19 +25,13 @@ public class menuAgent {
         this.paiementcontroller = paiement;
     }
 
-    public void start() throws Exception {
+    public void start(Agent connectedAgent) throws Exception {
         System.out.println(" Système de Gestion des Agents ");
 
-
-//        if (!showLoginScreen()) {
-//            System.out.println("\n✗ Authentification échouée. Au revoir!");
-//            return;
-//        }
-
-        showMainMenu();
+        showMainMenu(connectedAgent);
     }
 
-    private void showMainMenu() throws Exception {
+    private void showMainMenu(Agent agentAuthentifie) throws Exception {
         boolean running = true;
 
         while (running) {
@@ -80,7 +74,7 @@ public class menuAgent {
                     showTotalPaymentsView();
                     break;
                 case "8":
-                    showAddPaiementView();
+                    showAddPaiementView(agentAuthentifie);
                     break;
 //                case "8":
 //                    showProfileView();
@@ -97,7 +91,7 @@ public class menuAgent {
     }
 
     private void showAddAgentView() throws Exception {
-        System.out.println("═══ AJOUTER UN AGENT ═══\n");
+        System.out.println(" AJOUTER UN AGENT \n");
 
         System.out.print("Nom: ");
         String nom = scanner.nextLine().trim();
@@ -324,7 +318,7 @@ public class menuAgent {
     }
 
     // le montant négatif
-    private void showAddPaiementView() {
+    private void showAddPaiementView(Agent agentAuthentifie) {
         System.out.println("AJOUTER UN PAIEMENT \n");
         try {
             System.out.print("ID de l'agent: ");
@@ -332,24 +326,21 @@ public class menuAgent {
 
             Optional<Agent> agentOPt = controller.getAgentId(id);
             if (!agentOPt.isPresent()) {
-                System.out.println("✗ Agent introuvable!");
+                System.out.println(" Agent introuvable!");
                 return;
             }
+
             Agent agent = agentOPt.get();
             System.out.println("Types de paiement:");
             System.out.println("  1. SALAIRE");
             System.out.println("  2. PRIME");
-            System.out.println("  3. BONUS");
-            System.out.println("  4. INDEMNITE");
-            System.out.print("Choisissez (1-4): ");
+            System.out.print("Choisissez (1 ou 2): ");
             String choixType = scanner.nextLine().trim();
 
             TypePaiement type;
             switch (choixType) {
                 case "1": type = TypePaiement.SALAIRE; break;
                 case "2": type = TypePaiement.PRIME; break;
-                case "3": type = TypePaiement.BONUS; break;
-                case "4": type = TypePaiement.INDEMNITE; break;
                 default:
                     System.out.println("Type invalide, SALAIRE par défaut.");
                     type = TypePaiement.SALAIRE;
@@ -361,7 +352,7 @@ public class menuAgent {
             System.out.print("Motif: ");
             String motif = scanner.nextLine().trim();
 
-            paiementcontroller.ajouterPaiement(type, montant, motif, agent);
+            paiementcontroller.ajouterPaiement(type, montant, motif, agent, agentAuthentifie );
             System.out.println("Paiement ajouté avec succès!");
 
         } catch (NumberFormatException e) {

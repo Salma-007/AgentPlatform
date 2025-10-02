@@ -1,7 +1,9 @@
 package service;
 
+import enums.TypeAgent;
 import enums.TypePaiement;
 import exception.AgentNotFoundException;
+import exception.UnauthorizedPaiementException;
 import model.Agent;
 import model.Departement;
 import model.Paiement;
@@ -24,14 +26,49 @@ public class PaiementServiceImp implements PaiementService {
     }
 
     @Override
-    public void ajout(Paiement paiement) throws AgentNotFoundException, SQLException {
+    public void addPaiement(Paiement paiement, Agent agentAuthentifie) throws AgentNotFoundException, SQLException {
         Optional<Agent> agentOpt = agentrepo.getAgentId(paiement.getAgent().getIdAgent());
 
         if(!agentOpt.isPresent()){
             throw new AgentNotFoundException("agent with this id not found!");
         }
         Agent agent = agentOpt.get();
+        Agent agentCible = agentOpt.get();
+
+        // Vérification simple des autorisations
+        if (!peutAjouterPaiement(agentAuthentifie, agentCible, paiement.getType())) {
+            throw new UnauthorizedPaiementException("Action non autorisée");
+        }
         repo.createPaiement(paiement);
+    }
+
+    @Override
+    public boolean peutAjouterPaiement(Agent agentAuth, Agent agentCible, TypePaiement type) {
+        // Empêcher de se payer soi-même
+        if (agentAuth.getIdAgent() == agentCible.getIdAgent()) {
+            return false;
+        }
+
+        if (agentAuth.getType() == TypeAgent.DIRECTEUR) {
+            return agentCible.getType() == TypeAgent.RESPONSABLE_DEPARTEMENT ||
+                    agentCible.getType() == TypeAgent.DIRECTEUR;
+        }
+
+        if (agentAuth.getType() == TypeAgent.RESPONSABLE_DEPARTEMENT) {
+            boolean memeDepartement = agentCible.getDepartement().getIdDepartement() ==
+                    agentAuth.getDepartement().getIdDepartement();
+            boolean estOuvrier = agentCible.getType() == TypeAgent.OUVRIER;
+            boolean typeAutorise = type == TypePaiement.SALAIRE || type == TypePaiement.PRIME;
+
+            return memeDepartement && estOuvrier && typeAutorise;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void ajout(Paiement entity) throws SQLException {
+
     }
 
     @Override

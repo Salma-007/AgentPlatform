@@ -23,23 +23,20 @@ public class Main {
     public static void main(String[] args) throws Exception {
         DatabaseConnection.getConnection();
 
+        // dao layer
         AgentDAO agentDAO = new AgentDAO();
         AuthenticationDAO authDAO = new AuthenticationDAO();
-
         DepartementDAO departementDAO = new DepartementDAO();
-
         PaiementDAO paiementDAO = new PaiementDAO();
 
         // Repository Layer
         AgentRepository agentRepo = new AgentRepository(agentDAO);
         PaiementRepository paiementRepo = new PaiementRepository(paiementDAO);
-
         AuthenticationRepository authRepo = new AuthenticationRepository(authDAO);
-
         DepartementRepository deptRepo = new DepartementRepository(departementDAO);
-        PaiementServiceImp paiementService = new PaiementServiceImp(paiementRepo, agentRepo);
 
         // Service Layer
+        PaiementServiceImp paiementService = new PaiementServiceImp(paiementRepo, agentRepo);
         AgentServiceImp agentService = new AgentServiceImp(agentRepo, deptRepo, paiementService);
         AuthenticationService authService = new AuthenticationServiceImp(authRepo, agentRepo);
         DepartementServiceImp departementService = new DepartementServiceImp(deptRepo);
@@ -52,11 +49,8 @@ public class Main {
         // View Layer
         menuAgent view = new menuAgent(controller, depcontroller,paiementController);
         menuEmploye viewEmploye = new menuEmploye(controller, paiementController);
-        menuDirecteur viewDirecteur = new menuDirecteur(depcontroller);
+        menuDirecteur viewDirecteur = new menuDirecteur(depcontroller, paiementController, controller);
 
-        // Démarrage
-//        viewEmploye.showAgentMenu();
-//        view.start();
 
         //login
         Scanner sc = new Scanner(System.in);
@@ -75,6 +69,7 @@ public class Main {
                 if (connectedAgent == null) {
                     System.out.println("Identifiants invalides, veuillez réessayer.\n");
                 }
+                paiementController.setCurrentAgent(connectedAgent);
             }
 
             controller.setCurrentAgent(connectedAgent);
@@ -88,11 +83,11 @@ public class Main {
                     break;
 
                 case RESPONSABLE_DEPARTEMENT:
-                    view.start();
+                    view.start(connectedAgent);
                     break;
 
                 case DIRECTEUR:
-                    viewDirecteur.start();
+                    viewDirecteur.start(connectedAgent);
                     break;
 
                 default:
