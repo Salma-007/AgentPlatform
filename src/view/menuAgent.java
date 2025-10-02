@@ -183,7 +183,7 @@ public class menuAgent {
             controller.modifierAgent(id, nom, prenom, email, mdp, departement, type);
 
         } catch (NumberFormatException e) {
-            System.out.println("\n✗ ID invalide!");
+            System.out.println("\n ID invalide!");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

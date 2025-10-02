@@ -52,7 +52,7 @@ public class PaiementServiceImp implements PaiementService {
     @Override
     public Paiement findById(int id) {
         Optional<Paiement> paiement = repo.getPaiementById(id);
-        return paiement.orElseThrow(()-> new RuntimeException("ppayment not found!"));
+        return paiement.orElseThrow(()-> new RuntimeException("payment not found!"));
     }
 
     @Override
@@ -97,5 +97,7 @@ public class PaiementServiceImp implements PaiementService {
                 .filter(paiement -> paiement.getType().name() == type)
                 .toList();
     }
+
+
 
 }

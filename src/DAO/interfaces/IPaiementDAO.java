@@ -2,6 +2,7 @@ package DAO.interfaces;
 
 import model.Paiement;
 
-public interface IPaiementDAO extends GenericDAO<Paiement> {
+import java.util.List;
 
+public interface IPaiementDAO extends GenericDAO<Paiement> {
 }
