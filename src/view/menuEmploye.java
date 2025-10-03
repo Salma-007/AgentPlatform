@@ -2,6 +2,7 @@ package view;
 
 import controller.AgentController;
 import controller.PaiementController;
+import enums.TypePaiement;
 import model.Agent;
 import model.Paiement;
 
@@ -19,7 +20,7 @@ public class menuEmploye {
         this.scanner = new Scanner(System.in);
         this.agentController = agentController;
         this.paiementController = paiementController;
-        this.dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        this.dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     }
 
     public void showAgentMenu() {
@@ -34,7 +35,7 @@ public class menuEmploye {
 
         while (running) {
 
-            System.out.println(" ESPACE AGENT ");
+            System.out.println(" ESPACE EMPLOYE ");
             System.out.println("  1. Consulter mes informations");
             System.out.println("  2. Historique de mes paiements");
             System.out.println("  3. Trier paiements par montant");
@@ -163,7 +164,6 @@ public class menuEmploye {
 
     }
 
-
     private void showPaymentsSortedByDate() {
 
         System.out.println(" PAIEMENTS TRIÉS PAR DATE ");
@@ -266,7 +266,6 @@ public class menuEmploye {
 
 
     private void showDetailedStatistics() {
-
         System.out.println("STATISTIQUES DÉTAILLÉES");
 
         Agent currentAgent = agentController.getCurrentAgent();
@@ -274,84 +273,39 @@ public class menuEmploye {
 
         if (allPaiements == null || allPaiements.isEmpty()) {
             System.out.println("Aucun paiement trouvé.");
-
             return;
         }
 
-        // Calcul des statistiques par type
-        double totalSalaire = 0, totalPrime = 0, totalBonus = 0, totalIndemnite = 0;
-        int countSalaire = 0, countPrime = 0, countBonus = 0, countIndemnite = 0;
+        for (TypePaiement type : TypePaiement.values()) {
+            long count = paiementController.getCountByType(currentAgent, type);
+            double total = paiementController.getTotalByType(currentAgent, type);
 
-        for (Paiement p : allPaiements) {
-            switch (p.getType().name()) {
-                case "SALAIRE":
-                    totalSalaire += p.getMontant();
-                    countSalaire++;
-                    break;
-                case "PRIME":
-                    totalPrime += p.getMontant();
-                    countPrime++;
-                    break;
-                case "BONUS":
-                    totalBonus += p.getMontant();
-                    countBonus++;
-                    break;
-                case "INDEMNITE":
-                    totalIndemnite += p.getMontant();
-                    countIndemnite++;
-                    break;
+            if (count > 0) {
+                System.out.println("│ " + type.name());
+                System.out.println("│   Nombre : " + count);
+                System.out.println("│   Total  : " + String.format("%.2f DH", total));
             }
         }
 
-        double totalGeneral = agentController.getTotalByAgent(currentAgent);
-
-        System.out.println("│ RÉPARTITION PAR TYPE DE PAIEMENT                │");
-
-        if (countSalaire > 0) {
-            System.out.println("│ SALAIRE                                         │");
-            System.out.println("│   Nombre    : " + countSalaire + " paiement(s)");
-            System.out.println("│   Total     : " + String.format("%.2f DH", totalSalaire));
-        }
-
-        if (countPrime > 0) {
-            System.out.println("│ PRIME                                           │");
-            System.out.println("│   Nombre    : " + countPrime + " paiement(s)");
-            System.out.println("│   Total     : " + String.format("%.2f DH", totalPrime));
-        }
-
-        if (countBonus > 0) {
-            System.out.println("│ BONUS                                           │");
-            System.out.println("│   Nombre    : " + countBonus + " paiement(s)");
-            System.out.println("│   Total     : " + String.format("%.2f DH", totalBonus));
-        }
-
-        if (countIndemnite > 0) {
-            System.out.println("│ INDEMNITE                                       │");
-            System.out.println("│   Nombre    : " + countIndemnite + " paiement(s)");
-            System.out.println("│   Total     : " + String.format("%.2f DH", totalIndemnite));
-        }
-
-        System.out.println("│ TOTAL GÉNÉRAL                                   │");
+        double totalGeneral = paiementController.getTotalGeneral(currentAgent);
+        System.out.println("│ TOTAL GÉNÉRAL │");
         System.out.println("│   Paiements : " + allPaiements.size());
         System.out.println("│   Montant   : " + String.format("%.2f DH", totalGeneral));
-        System.out.println("│   Moyenne   : " + String.format("%.2f DH", totalGeneral/allPaiements.size()));
+        System.out.println("│   Moyenne   : " + String.format("%.2f DH", totalGeneral / allPaiements.size()));
 
-        // Paiement le plus élevé et le plus bas
-        if (!allPaiements.isEmpty()) {
-            Paiement max = allPaiements.stream().max((p1, p2) -> Double.compare(p1.getMontant(), p2.getMontant())).get();
-            Paiement min = allPaiements.stream().min((p1, p2) -> Double.compare(p1.getMontant(), p2.getMontant())).get();
+        paiementController.getPaiementMax(currentAgent).ifPresent(max -> {
+            System.out.println("│ Paiement le plus élevé │");
+            System.out.println("│   Type    : " + max.getType());
+            System.out.println("│   Montant : " + max.getMontant());
+            System.out.println("│   Date    : " + dateFormat.format(max.getDate()));
+        });
 
-            System.out.println("│ Paiement le plus élevé                          │");
-            System.out.println("│   Type      : " + max.getType());
-            System.out.println("│   Montant   : " + String.format("%.2f DH", max.getMontant()));
-            System.out.println("│   Date      : " + dateFormat.format(max.getDate()));
-            System.out.println("│ Paiement le plus bas                            │");
-            System.out.println("│   Type      : " + min.getType());
-            System.out.println("│   Montant   : " + String.format("%.2f DH", min.getMontant()));
-            System.out.println("│   Date      : " + dateFormat.format(min.getDate()));
-        }
-
-
+        paiementController.getPaiementMin(currentAgent).ifPresent(min -> {
+            System.out.println("│ Paiement le plus bas │");
+            System.out.println("│   Type    : " + min.getType());
+            System.out.println("│   Montant : " + min.getMontant());
+            System.out.println("│   Date    : " + dateFormat.format(min.getDate()));
+        });
     }
 
 

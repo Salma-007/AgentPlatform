@@ -4,26 +4,28 @@ import controller.DepartementController;
 import controller.PaiementController;
 import enums.TypeAgent;
 import enums.TypePaiement;
-import exception.DepartementNotFoundException;
 import model.Agent;
 import model.Departement;
-
+import model.Paiement;
+import java.text.SimpleDateFormat;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
-public class menuAgent {
+public class menuResponsable {
     private Scanner scanner;
     private AgentController controller;
     private DepartementController depcontroller;
     private PaiementController paiementcontroller;
+    private SimpleDateFormat dateFormat;
 
-    public menuAgent(AgentController controller, DepartementController dep, PaiementController paiement) {
+    public menuResponsable(AgentController controller, DepartementController dep, PaiementController paiement) {
         this.scanner = new Scanner(System.in);
         this.controller = controller;
         this.depcontroller = dep;
         this.paiementcontroller = paiement;
+        this.dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     }
 
     public void start(Agent connectedAgent) throws Exception {
@@ -36,7 +38,7 @@ public class menuAgent {
         boolean running = true;
 
         while (running) {
-            System.out.println("  MENU PRINCIPAL ");
+            System.out.println("  MENU RESPONSABLE");
             System.out.println("  1. Ajouter un agent");
             System.out.println("  2. Modifier un agent");
             System.out.println("  3. Supprimer un agent");
@@ -45,7 +47,7 @@ public class menuAgent {
             System.out.println("  6. Rechercher un agent par nom");
             System.out.println("  7. Afficher total paiements d'un agent");
             System.out.println("  8. ajouter un paiement pour un agent");
-            System.out.println("  9. Mon profil");
+            System.out.println("  9. Historique de mes paiements");
             System.out.println("  0. Quitter");
             System.out.println("─────────────────────────────────────────");
             System.out.print("Votre choix: ");
@@ -77,18 +79,50 @@ public class menuAgent {
                 case "8":
                     showAddPaiementView(agentAuthentifie);
                     break;
-//                case "8":
-//                    showProfileView();
-//                    break;
+                case "9":
+                    showMyPaymentsHistory();
+                    break;
                 case "0":
                     running = false;
-//                    controller.logout();
                     System.out.println("\n Déconnexion réussie. Au revoir!");
                     break;
                 default:
                     System.out.println("\n Option invalide!");
             }
         }
+    }
+
+    private void showMyPaymentsHistory() {
+
+        System.out.println(" HISTORIQUE DE MES PAIEMENTS ");
+
+        Agent currentAgent = controller.getCurrentAgent();
+        List<Paiement> paiements = paiementcontroller.retrievePaiementsPerAgent(currentAgent);
+
+        if (paiements == null || paiements.isEmpty()) {
+            System.out.println("Aucun paiement trouvé.");
+
+            return;
+        }
+
+        System.out.println("Total: " + paiements.size() + " paiement(s)\n");
+
+        double total = 0;
+        for (Paiement paiement : paiements) {
+            displayPaiementCard(paiement);
+            total += paiement.getMontant();
+        }
+
+        System.out.println("║ TOTAL: " + String.format("%-31s", String.format("%.2f DH", total)) + "║");
+
+    }
+
+    private void displayPaiementCard(Paiement paiement) {
+        System.out.println("│ ID      : " + paiement.getIdPaiement());
+        System.out.println("│ Type    : " + paiement.getType());
+        System.out.println("│ Montant : " + String.format("%.2f DH", paiement.getMontant()));
+        System.out.println("│ Date    : " + dateFormat.format(paiement.getDate()));
+        System.out.println("│ Motif   : " + paiement.getMotif());
     }
 
     private void showAddAgentView() throws Exception {
@@ -288,21 +322,6 @@ public class menuAgent {
             throw new RuntimeException(e);
         }
     }
-
-//    private void showProfileView() {
-//        System.out.println(" MON PROFIL \n");
-//
-//        Agent agent = controller.getCurrentAgent();
-//        displayAgentCard(agent);
-//
-//        Double total = controller.getMyTotalPayments();
-//        System.out.println("Total de mes paiements: " + String.format("%.2f DH", total));
-//
-//        if (agent.isEligibleForBonus()) {
-//            System.out.println("✓ Éligible aux bonus");
-//        }
-//
-//    }
 
     private void showDeleteAgentView() {
         System.out.println(" SUPPRIMER UN AGENT \n");

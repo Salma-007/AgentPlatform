@@ -35,7 +35,7 @@ public class menuDirecteur {
 
         while (running) {
             clearScreen();
-            System.out.println("===== GESTION DES DEPARTEMENTS =====");
+            System.out.println("  MENU DIRECTEUR ");
             System.out.println("1. Ajouter un département");
             System.out.println("2. Afficher tous les départements");
             System.out.println("3. Chercher un département par ID");
@@ -233,7 +233,6 @@ public class menuDirecteur {
             System.out.println(" Une erreur est survenue : " + e.getMessage());
         }
     }
-
 
     private void listAgentsByDepartement() {
         System.out.print("Nom du département : ");

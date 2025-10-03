@@ -60,6 +60,27 @@ public class PaiementController {
         service.modification(paiement);
     }
 
+    public double getTotalByType(Agent agent, TypePaiement type){
+        return service.getTotalByType(agent, type);
+    }
+
+    public long getCountByType(Agent agent, TypePaiement type){
+        return service.getCountByType(agent, type);
+    }
+
+    public double getTotalGeneral(Agent agent){
+        return service.getTotalGeneral(agent);
+    }
+
+    public Optional<Paiement> getPaiementMax(Agent agent){
+        return service.getPaiementMax(agent);
+    }
+
+    public Optional<Paiement> getPaiementMin(Agent agent){
+        return service.getPaiementMin(agent);
+    }
+
+
 
 
 }

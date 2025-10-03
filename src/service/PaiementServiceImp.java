@@ -72,6 +72,38 @@ public class PaiementServiceImp implements PaiementService {
     }
 
     @Override
+    public double getTotalByType(Agent agent, TypePaiement type) {
+        return paiementsByAgent(agent).stream()
+                .filter(p -> p.getType() == type)
+                .mapToDouble(Paiement::getMontant)
+                .sum();
+    }
+
+    @Override
+    public long getCountByType(Agent agent, TypePaiement type) {
+        return paiementsByAgent(agent).stream()
+                .filter(p -> p.getType() == type)
+                .count();
+    }
+
+    @Override
+    public double getTotalGeneral(Agent agent) {
+        return 0;
+    }
+
+    @Override
+    public Optional<Paiement> getPaiementMax(Agent agent) {
+        return paiementsByAgent(agent).stream()
+                .max(Comparator.comparingDouble(Paiement::getMontant));
+    }
+
+    @Override
+    public Optional<Paiement> getPaiementMin(Agent agent) {
+        return paiementsByAgent(agent).stream()
+                .min(Comparator.comparingDouble(Paiement::getMontant));
+    }
+
+    @Override
     public void ajout(Paiement entity) throws SQLException {
 
     }
@@ -139,6 +171,7 @@ public class PaiementServiceImp implements PaiementService {
                 .filter(paiement -> paiement.getType().name() == type)
                 .toList();
     }
+
 
 
 

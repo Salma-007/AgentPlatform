@@ -33,7 +33,6 @@ public class StatisticsServiceImp implements StatisticsService {
                 .orElse(null);
     }
 
-    // total
     @Override
     public Double totalPaiementPerDepartement(Departement departement) {
         return paiementService.paiementsByDepartement(departement)

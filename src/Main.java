@@ -5,15 +5,11 @@ import DAO.PaiementDAO;
 import config.DatabaseConnection;
 import controller.*;
 import enums.*;
-import DAO.interfaces.*;
 import model.*;
 import repository.*;
 import service.*;
-import service.interfaces.AgentService;
 import service.interfaces.AuthenticationService;
-import service.interfaces.DepartementService;
-import service.interfaces.PaiementService;
-import view.menuAgent;
+import view.menuResponsable;
 import view.menuDirecteur;
 import view.menuEmploye;
 
@@ -48,7 +44,7 @@ public class Main {
         DepartementController depcontroller = new DepartementController(departementService, statesService);
 
         // View Layer
-        menuAgent view = new menuAgent(controller, depcontroller,paiementController);
+        menuResponsable view = new menuResponsable(controller, depcontroller,paiementController);
         menuEmploye viewEmploye = new menuEmploye(controller, paiementController);
         menuDirecteur viewDirecteur = new menuDirecteur(depcontroller, paiementController, controller);
 
