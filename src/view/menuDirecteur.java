@@ -46,6 +46,8 @@ public class menuDirecteur {
             System.out.println("8. Afficher tous les agents ");
             System.out.println("9. Ajouter un responsable ");
             System.out.println("10. Afficher total paiement par departement ");
+            System.out.println("11. Afficher élévé paiement par departement ");
+            System.out.println("12. Afficher faible paiement par departement ");
             System.out.println("0. Retour / Quitter");
             System.out.print("Votre choix : ");
 
@@ -81,6 +83,9 @@ public class menuDirecteur {
                     break;
                 case "10":
                     totalParDepartement();
+                    break;
+                case "11":
+                    eleveParDepartement();
                     break;
                 case "0":
                     running = false;
@@ -133,6 +138,18 @@ public class menuDirecteur {
         } catch (Exception e) {
             System.out.println(" Erreur: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    private void eleveParDepartement(){
+        try {
+            System.out.print("ID du département : ");
+            int id = Integer.parseInt(scanner.nextLine().trim());
+            depController.getElevePaiementPerDepartement(id);
+        } catch (NumberFormatException e) {
+            System.out.println("⚠️ Veuillez entrer un nombre valide !");
+        } catch (DepartementNotFoundException e) {
+            System.out.println("Erreur : " + e.getMessage());
         }
     }
 

@@ -4,6 +4,7 @@ import exception.DepartementNotFoundException;
 import exception.DepartmentExceptionAlreadyExists;
 import model.Agent;
 import model.Departement;
+import model.Paiement;
 import service.DepartementServiceImp;
 import service.StatisticsServiceImp;
 
@@ -82,6 +83,20 @@ public class DepartementController {
         double total = statesService.totalPaiementPerDepartement(depResultat);
         System.out.println("le total de departement: "+depResultat.getNom()+" est: "+total+" DH ");
         return total;
+    }
+
+    public Paiement getFaiblePaiementPerDepartement(int id) throws DepartementNotFoundException {
+        Departement depResultat = service.findById(id);
+        Paiement paiement = statesService.getPaiementFaibleByDepartement(id);
+        System.out.println("Paiement faible de: "+depResultat.getNom()+" est de id: "+paiement.getIdPaiement()+" agent: "+paiement.getAgent().getNom()+" de montant: "+paiement.getMontant()+" de date: "+paiement.getDate()+" de type: "+paiement.getType().name());
+        return paiement;
+    }
+
+    public Paiement getElevePaiementPerDepartement(int id) throws DepartementNotFoundException {
+        Departement depResultat = service.findById(id);
+        Paiement paiement = statesService.getPaiementEleveByDepartement(id);
+        System.out.println("Paiement élevé de: "+depResultat.getNom()+" est de id: "+paiement.getIdPaiement()+" agent: "+paiement.getAgent().getNom()+" de montant: "+paiement.getMontant()+" de date: "+paiement.getDate()+" de type: "+paiement.getType().name());
+        return paiement;
     }
 
 

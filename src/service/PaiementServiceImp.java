@@ -57,7 +57,7 @@ public class PaiementServiceImp implements PaiementService {
         if (agentAuth.getType() == TypeAgent.RESPONSABLE_DEPARTEMENT) {
             boolean memeDepartement = agentCible.getDepartement().getIdDepartement() ==
                     agentAuth.getDepartement().getIdDepartement();
-            boolean estOuvrier = agentCible.getType() == TypeAgent.OUVRIER;
+            boolean estOuvrier = agentCible.getType() == TypeAgent.OUVRIER || agentCible.getType() == TypeAgent.STAGIAIRE;
             boolean typeAutorise = type == TypePaiement.SALAIRE || type == TypePaiement.PRIME;
 
             return memeDepartement && estOuvrier && typeAutorise;

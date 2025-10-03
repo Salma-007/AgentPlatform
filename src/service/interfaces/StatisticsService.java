@@ -7,4 +7,6 @@ public interface StatisticsService{
     Paiement getPaiementEleve();
     Paiement getPaiementFaible();
     Double totalPaiementPerDepartement(Departement departement);
+    Paiement getPaiementFaibleByDepartement(int departementId);
+    Paiement getPaiementEleveByDepartement(int departementId);
 }

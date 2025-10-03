@@ -336,7 +336,6 @@ public class menuAgent {
         }
     }
 
-    // le montant négatif
     private void showAddPaiementView(Agent agentAuthentifie) {
         System.out.println("AJOUTER UN PAIEMENT \n");
         try {
@@ -371,7 +370,7 @@ public class menuAgent {
             System.out.print("Motif: ");
             String motif = scanner.nextLine().trim();
 
-            paiementcontroller.ajouterPaiement(type, montant, motif, agent, agentAuthentifie );
+            paiementcontroller.ajouterPaiement(type, montant, motif, agent, agentAuthentifie);
             System.out.println("Paiement ajouté avec succès!");
 
         } catch (NumberFormatException e) {

@@ -5,6 +5,7 @@ import model.Paiement;
 import service.interfaces.PaiementService;
 import service.interfaces.StatisticsService;
 
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 public class StatisticsServiceImp implements StatisticsService {
@@ -39,5 +40,23 @@ public class StatisticsServiceImp implements StatisticsService {
                 .stream()
                 .mapToDouble(Paiement::getMontant)
                 .sum();
+    }
+
+    @Override
+    public Paiement getPaiementFaibleByDepartement(int departementId) {
+        return paiementService.retrieveAll()
+                .stream()
+                .filter(p -> p.getAgent().getDepartement().getIdDepartement() == departementId)
+                .min(Comparator.comparingDouble(Paiement::getMontant))
+                .orElse(null);
+    }
+
+    @Override
+    public Paiement getPaiementEleveByDepartement(int departementId) {
+        return paiementService.retrieveAll()
+                .stream()
+                .filter(p -> p.getAgent().getDepartement().getIdDepartement() == departementId)
+                .max(Comparator.comparingDouble(Paiement::getMontant))
+                .orElse(null);
     }
 }
