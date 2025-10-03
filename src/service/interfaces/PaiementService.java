@@ -16,4 +16,5 @@ public interface PaiementService extends ServiceInterface<Paiement>{
     List<Paiement> paiementTriParType(Agent agent, String type);
     void addPaiement(Paiement paiement, Agent agent) throws SQLException;
     boolean peutAjouterPaiement(Agent agentAuth, Agent agentCible, TypePaiement type);
+    List<Paiement> paiementsIvalides();
 }

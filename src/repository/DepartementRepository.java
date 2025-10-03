@@ -40,6 +40,10 @@ public class DepartementRepository {
             return dao.getDepartementAndResponsable(nom);
         }
 
+        public Optional<Departement> getDepartementAndResponsable(int id){
+            return dao.getDepartementAndResponsable(id);
+        }
+
         public void supprimerDepartement(Departement dep){
             dao.delete(dep);
         }

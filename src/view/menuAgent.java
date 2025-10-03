@@ -184,7 +184,7 @@ public class menuAgent {
     }
 
     private void showAllAgentsView() {
-        System.out.println("═══ LISTE DES AGENTS ═══\n");
+        System.out.println("═══ LISTE DES AGENTS \n");
 
         List<Agent> agents = controller.agentsList();
 

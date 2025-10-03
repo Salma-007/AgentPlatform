@@ -6,7 +6,6 @@ import model.Departement;
 import repository.DepartementRepository;
 import service.interfaces.DepartementService;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,4 +56,11 @@ public class DepartementServiceImp implements DepartementService {
     public Departement retrieveDepartementAndResponsable(String nom) {
         return repo.trouverDepartementResponsableByName(nom);
     }
+
+    @Override
+    public Departement getDepartementAndResponsable(int id) throws DepartementNotFoundException {
+        Optional<Departement> departement = repo.getDepartementAndResponsable(id);
+        return departement.orElseThrow(()-> new DepartementNotFoundException("department not found!"));
+    }
+
 }

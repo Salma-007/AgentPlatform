@@ -3,10 +3,13 @@ package view;
 import controller.AgentController;
 import controller.DepartementController;
 import controller.PaiementController;
+import enums.TypeAgent;
 import enums.TypePaiement;
 import exception.DepartementNotFoundException;
+import exception.PaymentNotFoundException;
 import model.Agent;
 import model.Departement;
+import model.Paiement;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -27,7 +30,7 @@ public class menuDirecteur {
         this.agentcontroller = agentcontroller;
     }
 
-    public void start(Agent agentAuthentifie) {
+    public void start(Agent agentAuthentifie) throws Exception {
         boolean running = true;
 
         while (running) {
@@ -38,6 +41,10 @@ public class menuDirecteur {
             System.out.println("3. Chercher un département par ID");
             System.out.println("4. Afficher les agents d’un département");
             System.out.println("5. ajouter un paiement pour un agent");
+            System.out.println("6. Afficher les paiements invalides");
+            System.out.println("7. Valider un paiement");
+            System.out.println("8. Afficher tous les agents ");
+            System.out.println("9. Ajouter un responsable ");
             System.out.println("0. Retour / Quitter");
             System.out.print("Votre choix : ");
 
@@ -59,6 +66,18 @@ public class menuDirecteur {
                 case "5":
                     showAddPaiementView(agentAuthentifie);
                     break;
+                case "6":
+                    showInvalidePaiement();
+                    break;
+                case "7":
+                    validPaiement();
+                    break;
+                case "8":
+                    allAgents();
+                    break;
+                case "9":
+                    ajouterResponsable();
+                    break;
                 case "0":
                     running = false;
                     System.out.println("Retour au menu précédent...");
@@ -67,6 +86,75 @@ public class menuDirecteur {
                     System.out.println("Option invalide !");
             }
         }
+    }
+
+    private void ajouterResponsable() {
+        try {
+            System.out.print("ID du département : ");
+            int id = Integer.parseInt(scanner.nextLine());
+
+            Optional<Departement> depart = depController.getDepartementAndResponsable(id);
+
+            if(!depart.isPresent()){
+                System.out.println(" Département introuvable!");
+                return;
+            }
+
+            Departement dep = depart.get();
+
+            if(dep.getResponsable() != null){
+                System.out.println("⚠️ Ce département a déjà un responsable : "
+                        + dep.getResponsable().getNom() + " " + dep.getResponsable().getPrenom());
+                return;
+            }
+
+            System.out.print("Nom: ");
+            String nom = scanner.nextLine().trim();
+
+            System.out.print("Prénom: ");
+            String prenom = scanner.nextLine().trim();
+
+            System.out.print("Email: ");
+            String email = scanner.nextLine().trim();
+
+            System.out.print("Mot de passe: ");
+            String motDePasse = scanner.nextLine();
+
+            agentcontroller.addAgent(nom, prenom, email, motDePasse, dep, TypeAgent.RESPONSABLE_DEPARTEMENT);
+
+            System.out.println("✓ Responsable ajouté avec succès!");
+
+        } catch (NumberFormatException e) {
+            System.out.println(" ID invalide! Veuillez entrer un nombre.");
+        } catch (Exception e) {
+            System.out.println(" Erreur: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void allAgents(){
+        System.out.println("═══ LISTE DES AGENTS ═══\n");
+
+        List<Agent> agents = agentcontroller.agentsList();
+
+        if (agents == null || agents.isEmpty()) {
+            System.out.println("Aucun agent trouvé.");
+            return;
+        }
+
+        System.out.println("Total: " + agents.size() + " agents\n");
+
+        for (Agent agent : agents) {
+            displayAgentCard(agent);
+        }
+    }
+
+    private void displayAgentCard(Agent agent) {
+        System.out.println("│ ID: " + agent.getIdAgent());
+        System.out.println("│ Nom: " + agent.getNom() + " " + agent.getPrenom());
+        System.out.println("│ Email: " + agent.getEmail());
+        System.out.println("│ Département: " + agent.getDepartement().getNom());
+        System.out.println("│ Type: " + agent.getType());
     }
 
     private void addDepartement() {
@@ -94,6 +182,21 @@ public class menuDirecteur {
         }
     }
 
+    public void validPaiement(){
+        System.out.print("ID du paiement : ");
+        int id = Integer.parseInt(scanner.nextLine());
+        try {
+            paiementcontroller.retrieveInvalidePayments()
+                    .stream()
+                    .filter(p-> p.getIdPaiement()== id)
+                    .findFirst()
+                    .ifPresentOrElse(p-> paiementcontroller.validatePayment(p),
+                    ()-> {throw new PaymentNotFoundException("payment not found!");});
+        } catch (PaymentNotFoundException e) {
+            System.out.println("Erreur : " + e.getMessage());
+        }
+    }
+
     private void listAgentsByDepartement() {
         System.out.print("Nom du département : ");
         String nom = scanner.nextLine();
@@ -101,7 +204,7 @@ public class menuDirecteur {
         if (!agents.isEmpty()) {
             System.out.println("\nAgents du département " + nom + " :");
             for (Agent a : agents) {
-                System.out.println("-id " + a.getIdAgent() +" nom: " + a.getNom() + " " + a.getPrenom()+" email: " + a.getEmail());
+                System.out.println("-id " + a.getIdAgent() +" nom: " + a.getNom() + " " + a.getPrenom()+" email: " + a.getEmail()+" role: "+a.getType().name());
             }
         }
         else{
@@ -157,6 +260,19 @@ public class menuDirecteur {
             System.out.println("Entrée invalide !");
         } catch (Exception e) {
             System.out.println("Erreur: " + e.getMessage());
+        }
+    }
+
+    private void showInvalidePaiement(){
+        System.out.println("LISTE PAIEMENTS INVALIDES \n");
+
+        List<Paiement> paiements = paiementcontroller.retrieveInvalidePayments();
+        if(!paiements.isEmpty()){
+            for(Paiement p:paiements){
+                System.out.println("id payment: "+p.getIdPaiement()+" agent: "+p.getAgent().getNom()+" "+p.getAgent().getPrenom()+" montant: "+p.getMontant()+" date: "+p.getDate()+" motif: "+p.getMotif());
+            }
+        }else{
+            System.out.println("no payments found!");
         }
     }
 }

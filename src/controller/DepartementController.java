@@ -30,6 +30,20 @@ public class DepartementController {
         return Optional.of(depResultat);
     }
 
+    public Optional<Departement> getDepartementAndResponsable(int id) throws DepartementNotFoundException {
+        Departement dep = service.getDepartementAndResponsable(id);
+        return Optional.of(dep);
+    }
+
+
+    public boolean departementHaveNotResponsable(int id) throws DepartementNotFoundException {
+        Departement depResultat = service.findById(id);
+        if(depResultat.getResponsable().getIdAgent() < 0){
+            return true;
+        }
+        return false;
+    }
+
     public void departementsList(){
         List<Departement> deps = new ArrayList<>();
         deps = service.retrieveAll();

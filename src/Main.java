@@ -69,7 +69,6 @@ public class Main {
                 if (connectedAgent == null) {
                     System.out.println("Identifiants invalides, veuillez réessayer.\n");
                 }
-                paiementController.setCurrentAgent(connectedAgent);
             }
 
             controller.setCurrentAgent(connectedAgent);

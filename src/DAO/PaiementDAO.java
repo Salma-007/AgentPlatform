@@ -41,20 +41,15 @@ public class PaiementDAO implements IPaiementDAO {
 
     @Override
     public void update(Paiement paiement) {
-        String querySQL = "UPDATE paiement SET typePaiement = ?, montant = ?, date = ?, motif = ?, idAgent = ? WHERE id = ?";
+        String querySQL = "UPDATE paiement SET conditionValidee = true WHERE id = ?";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(querySQL)) {
 
-            statement.setString(1, paiement.getType().name());
-            statement.setDouble(2, paiement.getMontant());
-            statement.setDate(3, (Date) paiement.getDate());
-            statement.setString(4, paiement.getMotif());
-            statement.setInt(5, paiement.getAgent().getIdAgent());
-            statement.setInt(6, paiement.getIdPaiement());
+            statement.setInt(1, paiement.getIdPaiement());
 
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated > 0) {
-                System.out.println("the payment was updated successfully! ");
+                System.out.println("the payment was validated successfully! ");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -140,4 +135,31 @@ public class PaiementDAO implements IPaiementDAO {
         return null;
     }
 
+    @Override
+    public List<Paiement> retrieveInvalidatedPayments() {
+        List<Paiement> paiements = new ArrayList<>();
+
+        String querySQL = "select * from paiement join agent on agent.id = paiement.idAgent where paiement.conditionValidee = false and (agent.typeAgent = \"DIRECTEUR\" or agent.typeAgent = \"RESPONSABLE_DEPARTEMENT\");";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(querySQL)) {
+            ResultSet resultSet = statement.executeQuery();
+
+            while(resultSet.next()){
+                IAgentDAO agentDAO = new AgentDAO();
+                Optional<Agent> agentOpt = agentDAO.findById(resultSet.getInt("idAgent"));
+                if(!agentOpt.isPresent()){
+                    throw new AgentNotFoundException("agent not found!");
+                }
+                Agent agent = agentOpt.get();
+                String typePaiement = resultSet.getString("typePaiement");
+
+                paiements.add(new Paiement(resultSet.getInt("id"), TypePaiement.valueOf(typePaiement), resultSet.getDouble("montant"), resultSet.getDate("date"), resultSet.getString("motif"), agent));
+            }
+            return paiements;
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

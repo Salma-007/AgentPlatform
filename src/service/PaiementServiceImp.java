@@ -3,6 +3,7 @@ package service;
 import enums.TypeAgent;
 import enums.TypePaiement;
 import exception.AgentNotFoundException;
+import exception.PaymentNotFoundException;
 import exception.UnauthorizedPaiementException;
 import model.Agent;
 import model.Departement;
@@ -67,6 +68,11 @@ public class PaiementServiceImp implements PaiementService {
     }
 
     @Override
+    public List<Paiement> paiementsIvalides() {
+        return repo.getFalsePaiements();
+    }
+
+    @Override
     public void ajout(Paiement entity) throws SQLException {
 
     }
@@ -89,7 +95,7 @@ public class PaiementServiceImp implements PaiementService {
     @Override
     public Paiement findById(int id) {
         Optional<Paiement> paiement = repo.getPaiementById(id);
-        return paiement.orElseThrow(()-> new RuntimeException("payment not found!"));
+        return paiement.orElseThrow(()-> new PaymentNotFoundException("payment not found!"));
     }
 
     @Override

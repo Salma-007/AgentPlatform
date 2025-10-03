@@ -110,9 +110,8 @@ public class menuEmploye {
             System.out.println("│ Responsable   : " + responsable.getPrenom() + " " + responsable.getNom());
         }
 
-
         if (agent.isEligibleForBonus()) {
-            System.out.println("\n✓ Vous êtes éligible aux bonus!");
+            System.out.println("\n Vous êtes éligible aux bonus!");
         }
 
         pause();

@@ -2,6 +2,7 @@ package DAO;
 
 import config.DatabaseConnection;
 import DAO.interfaces.IDepartementDAO;
+import enums.TypeAgent;
 import model.Agent;
 import model.Departement;
 import java.sql.Connection;
@@ -51,6 +52,47 @@ public class DepartementDAO implements IDepartementDAO {
             }
 
         }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Departement> getDepartementAndResponsable(int id) {
+        String querySQL = "SELECT d.id, d.nom, " +
+                "a.id as respo_id, a.nom as respo_nom, a.prenom, a.email " +
+                "FROM departement d " +
+                "LEFT JOIN agent a ON d.id = a.idDepartement " +
+                "AND a.typeAgent = 'RESPONSABLE_DEPARTEMENT' " +
+                "WHERE d.id = ?";
+
+        try(Connection connection = DatabaseConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(querySQL)) {
+
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+            if(resultSet.next()){
+                Departement dep = new Departement(
+                        resultSet.getInt("id"),
+                        resultSet.getString("nom")
+                );
+
+                // Vérifier si un responsable existe (LEFT JOIN peut retourner NULL)
+                if(resultSet.getObject("respo_id") != null) {
+                    Agent responsable = new Agent(
+                            resultSet.getInt("respo_id"),
+                            resultSet.getString("respo_nom"),
+                            resultSet.getString("prenom"),
+                            resultSet.getString("email")
+                    );
+                    dep.setResponsable(responsable);
+                }
+
+                return Optional.of(dep);
+            }
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return Optional.empty();
@@ -141,7 +183,7 @@ public class DepartementDAO implements IDepartementDAO {
             ResultSet resultSet = statement.executeQuery();
 
             while(resultSet.next()){
-                agents.add(new Agent(resultSet.getInt("id"), resultSet.getString("nom"), resultSet.getString("prenom"), resultSet.getString("email")));
+                agents.add(new Agent(resultSet.getInt("id"), resultSet.getString("nom"), resultSet.getString("prenom"), resultSet.getString("email"), TypeAgent.valueOf(resultSet.getString("typeAgent"))));
             }
             return agents;
 
@@ -174,4 +216,5 @@ public class DepartementDAO implements IDepartementDAO {
         }
         return null;
     }
+
 }

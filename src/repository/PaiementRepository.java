@@ -34,5 +34,7 @@ public class PaiementRepository {
         return dao.findById(id);
     }
 
-
+    public List<Paiement> getFalsePaiements(){
+        return dao.retrieveInvalidatedPayments();
+    }
 }
