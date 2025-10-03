@@ -1,9 +1,11 @@
 package controller;
 
 import exception.DepartementNotFoundException;
+import exception.DepartmentExceptionAlreadyExists;
 import model.Agent;
 import model.Departement;
 import service.DepartementServiceImp;
+import service.StatisticsServiceImp;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,15 +15,22 @@ import java.util.Optional;
 public class DepartementController {
 
     private DepartementServiceImp service;
+    private StatisticsServiceImp statesService;
 
-    public DepartementController(DepartementServiceImp service){
+    public DepartementController(DepartementServiceImp service, StatisticsServiceImp states){
         this.service = service;
+        this.statesService = states;
     }
 
     public void addDepartement(String nom) throws SQLException {
-        Departement dep = new Departement(nom);
-        service.ajout(dep);
-        System.out.println("departement ajouté : " + dep.getNom());
+        try{
+            Departement dep = new Departement(nom);
+            service.ajout(dep);
+            System.out.println("departement ajouté : " + dep.getNom());
+
+        }catch(DepartmentExceptionAlreadyExists e){
+            System.out.println(e.getMessage());
+        }
     }
 
     public Optional<Departement> getDepId(int id) throws DepartementNotFoundException {
@@ -33,15 +42,6 @@ public class DepartementController {
     public Optional<Departement> getDepartementAndResponsable(int id) throws DepartementNotFoundException {
         Departement dep = service.getDepartementAndResponsable(id);
         return Optional.of(dep);
-    }
-
-
-    public boolean departementHaveNotResponsable(int id) throws DepartementNotFoundException {
-        Departement depResultat = service.findById(id);
-        if(depResultat.getResponsable().getIdAgent() < 0){
-            return true;
-        }
-        return false;
     }
 
     public void departementsList(){
@@ -76,5 +76,13 @@ public class DepartementController {
     public Departement getDepartementbyName(String nom){
         return service.findByName(nom);
     }
+
+    public double getTotalPaiementPerDepartment(int id) throws DepartementNotFoundException {
+        Departement depResultat = service.findById(id);
+        double total = statesService.totalPaiementPerDepartement(depResultat);
+        System.out.println("le total de departement: "+depResultat.getNom()+" est: "+total+" DH ");
+        return total;
+    }
+
 
 }

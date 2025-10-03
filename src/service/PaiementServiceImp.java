@@ -45,7 +45,6 @@ public class PaiementServiceImp implements PaiementService {
 
     @Override
     public boolean peutAjouterPaiement(Agent agentAuth, Agent agentCible, TypePaiement type) {
-        // Empêcher de se payer soi-même
         if (agentAuth.getIdAgent() == agentCible.getIdAgent()) {
             return false;
         }

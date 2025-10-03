@@ -61,7 +61,6 @@ public class AgentDAO implements IAgentDAO {
             if (rowsUpdated > 0) {
                 System.out.println("the agent was updated successfully with name: " + agent.getNom());
             }
-
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -124,6 +123,7 @@ public class AgentDAO implements IAgentDAO {
                 String nom = resultSet.getString("nom");
                 String prenom = resultSet.getString("prenom");
                 String email = resultSet.getString("email");
+                String mdp = resultSet.getString("mdp");
                 int depId = resultSet.getInt("idDepartement");
                 String typeAgent = resultSet.getString("typeAgent");
 
@@ -134,7 +134,7 @@ public class AgentDAO implements IAgentDAO {
                 }
                 Departement departement = departementOpt.get();
 
-                return Optional.of(new Agent(agentId, nom, prenom, email, departement, TypeAgent.valueOf(typeAgent)));
+                return Optional.of(new Agent(agentId, nom, prenom, email, mdp,departement, TypeAgent.valueOf(typeAgent)));
             }
 
         }catch (Exception e){

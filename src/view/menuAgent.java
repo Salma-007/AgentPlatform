@@ -4,6 +4,7 @@ import controller.DepartementController;
 import controller.PaiementController;
 import enums.TypeAgent;
 import enums.TypePaiement;
+import exception.DepartementNotFoundException;
 import model.Agent;
 import model.Departement;
 
@@ -151,19 +152,31 @@ public class menuAgent {
 
             System.out.print("Nouveau nom [" + agent.getNom() + "]: ");
             String nom = scanner.nextLine().trim();
-
+            if(nom.isEmpty()){
+                nom = agent.getNom();
+            }
             System.out.print("Nouveau prénom [" + agent.getPrenom() + "]: ");
             String prenom = scanner.nextLine().trim();
-
+            if(prenom.isEmpty()){
+                prenom = agent.getPrenom();
+            }
             System.out.print("Nouvel email [" + agent.getEmail() + "]: ");
             String email = scanner.nextLine().trim();
-
+            if(email.isEmpty()){
+                email = agent.getEmail();
+            }
             System.out.print("Nouveau mot de passe: ");
             String mdp = scanner.nextLine();
-
+            if(mdp.isEmpty()){
+                mdp = agent.getMotDePasse();
+            }
             System.out.print("Nouveau departement: ");
             String dep = scanner.nextLine();
+
             Departement departement = depcontroller.getDepartementbyName(dep);
+            if(departement == null){
+                departement = agent.getDepartement();
+            }
 
             System.out.print("Nouveau type: ");
             System.out.println("\nTypes d'agent:");
@@ -173,6 +186,9 @@ public class menuAgent {
             System.out.print("Choisissez (1-3): ");
 
             TypeAgent type = getTypeAgentFromInput(scanner.nextLine().trim());
+            if(type.name().isEmpty()){
+                type = agent.getType();
+            }
 
             controller.modifierAgent(id, nom, prenom, email, mdp, departement, type);
 
@@ -226,7 +242,10 @@ public class menuAgent {
                 System.out.println();
                 displayAgentCard(agentOpt.get());
             }
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
+            System.out.println("Entrée invalide !");
+        }
+         catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

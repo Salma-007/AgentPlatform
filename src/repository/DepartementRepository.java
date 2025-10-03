@@ -4,7 +4,6 @@ package repository;
 import DAO.DepartementDAO;
 import model.Agent;
 import model.Departement;
-import service.interfaces.DepartementService;
 
 import java.util.List;
 import java.util.Optional;

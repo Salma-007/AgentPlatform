@@ -1,8 +1,10 @@
 package controller;
 
 import enums.TypePaiement;
+import exception.DepartementNotFoundException;
 import exception.MontantNegatifException;
 import model.Agent;
+import model.Departement;
 import model.Paiement;
 import service.PaiementServiceImp;
 import service.interfaces.PaiementService;
@@ -17,7 +19,6 @@ public class PaiementController {
     public PaiementController(PaiementServiceImp service){
         this.service = service;
     }
-
 
     public void ajouterPaiement(TypePaiement type, double montant, String motif, Agent agent, Agent agentCible) throws SQLException, MontantNegatifException {
         Paiement p = new Paiement(type, montant, motif, agent);
@@ -49,9 +50,16 @@ public class PaiementController {
         return Optional.of(paiement);
     }
 
-    public void validatePayment(Paiement paiement){
+    public void validatePaymentById(int id) {
+        Paiement paiement = service.findById(id); // lève PaymentNotFoundException si inexistant
+        validatePayment(paiement);
+    }
+
+    public void validatePayment(Paiement paiement) {
+        paiement.setConditionValidee(true);
         service.modification(paiement);
     }
+
 
 
 }

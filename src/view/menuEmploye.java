@@ -33,8 +33,6 @@ public class menuEmploye {
         boolean running = true;
 
         while (running) {
-            clearScreen();
-            displayHeader(currentAgent);
 
             System.out.println(" ESPACE AGENT ");
             System.out.println("  1. Consulter mes informations");
@@ -76,22 +74,17 @@ public class menuEmploye {
                     running = false;
                     agentController.logout();
                     System.out.println("\n✓ Déconnexion réussie. Au revoir!");
-                    pause();
+
                     break;
                 default:
                     System.out.println("\n✗ Option invalide!");
-                    pause();
+
             }
         }
     }
 
-    private void displayHeader(Agent agent) {
-        System.out.println("║  Connecté: " + String.format("%-28s", agent.getPrenom() + " " + agent.getNom()) + "║");
-        System.out.println("║  Type: " + String.format("%-32s", agent.getType()) + "║");
-    }
-
     private void showMyInformations() {
-        clearScreen();
+
         System.out.println(" MES INFORMATIONS ");
 
         Agent agent = agentController.getCurrentAgent();
@@ -114,11 +107,11 @@ public class menuEmploye {
             System.out.println("\n Vous êtes éligible aux bonus!");
         }
 
-        pause();
+
     }
 
     private void showMyPaymentsHistory() {
-        clearScreen();
+
         System.out.println(" HISTORIQUE DE MES PAIEMENTS ");
 
         Agent currentAgent = agentController.getCurrentAgent();
@@ -126,7 +119,7 @@ public class menuEmploye {
 
         if (paiements == null || paiements.isEmpty()) {
             System.out.println("Aucun paiement trouvé.");
-            pause();
+
             return;
         }
 
@@ -140,11 +133,11 @@ public class menuEmploye {
 
         System.out.println("║ TOTAL: " + String.format("%-31s", String.format("%.2f DH", total)) + "║");
 
-        pause();
+
     }
 
     private void showPaymentsSortedByMontant() {
-        clearScreen();
+
         System.out.println("  PAIEMENTS TRIÉS PAR MONTANT ");
 
         Agent currentAgent = agentController.getCurrentAgent();
@@ -152,7 +145,7 @@ public class menuEmploye {
 
         if (paiements == null || paiements.isEmpty()) {
             System.out.println("Aucun paiement trouvé.");
-            pause();
+
             return;
         }
 
@@ -167,12 +160,12 @@ public class menuEmploye {
 
         System.out.println("TOTAL: " + String.format("%-31s", String.format("%.2f DH", total)));
 
-        pause();
+
     }
 
 
     private void showPaymentsSortedByDate() {
-        clearScreen();
+
         System.out.println(" PAIEMENTS TRIÉS PAR DATE ");
 
         Agent currentAgent = agentController.getCurrentAgent();
@@ -180,7 +173,7 @@ public class menuEmploye {
 
         if (paiements == null || paiements.isEmpty()) {
             System.out.println("Aucun paiement trouvé.");
-            pause();
+
             return;
         }
 
@@ -196,11 +189,11 @@ public class menuEmploye {
         System.out.println("TOTAL: " + String.format("%-31s", String.format("%.2f DH", total)));
 
 
-        pause();
+
     }
 
     private void showPaymentsFilteredByType() {
-        clearScreen();
+
         System.out.println(" FILTRER PAR TYPE DE PAIEMENT ");
 
         System.out.println("Types de paiement disponibles:");
@@ -215,7 +208,7 @@ public class menuEmploye {
 
         if (typeStr == null) {
             System.out.println("\n Choix invalide!");
-            pause();
+
             return;
         }
 
@@ -226,7 +219,7 @@ public class menuEmploye {
 
         if (paiements == null || paiements.isEmpty()) {
             System.out.println("Aucun paiement de type " + typeStr + " trouvé.");
-            pause();
+
             return;
         }
 
@@ -240,12 +233,12 @@ public class menuEmploye {
 
         System.out.println(" TOTAL " + String.format("%-10s", typeStr) + ": " + String.format("%-20s", String.format("%.2f DH", total)) );
 
-        pause();
+
     }
 
 
     private void showTotalPayments() {
-        clearScreen();
+
         System.out.println(" TOTAL DE MES PAIEMENTS ");
 
         Agent currentAgent = agentController.getCurrentAgent();
@@ -268,12 +261,12 @@ public class menuEmploye {
             System.out.println("\nMoyenne par paiement: " + String.format("%.2f DH", moyenne));
         }
 
-        pause();
+
     }
 
 
     private void showDetailedStatistics() {
-        clearScreen();
+
         System.out.println("STATISTIQUES DÉTAILLÉES");
 
         Agent currentAgent = agentController.getCurrentAgent();
@@ -281,7 +274,7 @@ public class menuEmploye {
 
         if (allPaiements == null || allPaiements.isEmpty()) {
             System.out.println("Aucun paiement trouvé.");
-            pause();
+
             return;
         }
 
@@ -318,28 +311,24 @@ public class menuEmploye {
             System.out.println("│ SALAIRE                                         │");
             System.out.println("│   Nombre    : " + countSalaire + " paiement(s)");
             System.out.println("│   Total     : " + String.format("%.2f DH", totalSalaire));
-            System.out.println("│   Pourcentage: " + String.format("%.1f%%", (totalSalaire/totalGeneral)*100));
         }
 
         if (countPrime > 0) {
             System.out.println("│ PRIME                                           │");
             System.out.println("│   Nombre    : " + countPrime + " paiement(s)");
             System.out.println("│   Total     : " + String.format("%.2f DH", totalPrime));
-            System.out.println("│   Pourcentage: " + String.format("%.1f%%", (totalPrime/totalGeneral)*100));
         }
 
         if (countBonus > 0) {
             System.out.println("│ BONUS                                           │");
             System.out.println("│   Nombre    : " + countBonus + " paiement(s)");
             System.out.println("│   Total     : " + String.format("%.2f DH", totalBonus));
-            System.out.println("│   Pourcentage: " + String.format("%.1f%%", (totalBonus/totalGeneral)*100));
         }
 
         if (countIndemnite > 0) {
             System.out.println("│ INDEMNITE                                       │");
             System.out.println("│   Nombre    : " + countIndemnite + " paiement(s)");
             System.out.println("│   Total     : " + String.format("%.2f DH", totalIndemnite));
-            System.out.println("│   Pourcentage: " + String.format("%.1f%%", (totalIndemnite/totalGeneral)*100));
         }
 
         System.out.println("│ TOTAL GÉNÉRAL                                   │");
@@ -362,7 +351,7 @@ public class menuEmploye {
             System.out.println("│   Date      : " + dateFormat.format(min.getDate()));
         }
 
-        pause();
+
     }
 
 
@@ -385,14 +374,4 @@ public class menuEmploye {
         }
     }
 
-
-    private void pause() {
-        System.out.print("\nAppuyez sur Entrée pour continuer...");
-        scanner.nextLine();
-    }
-
-
-    private void clearScreen() {
-        System.out.print("\n\n\n");
-    }
 }

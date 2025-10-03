@@ -29,7 +29,7 @@ public class AgentServiceImp implements AgentService {
     }
 
     @Override
-    public void modification(Agent agent) {
+    public void modification(Agent agent) throws DepartementNotFoundException {
         repo.updateAgent(agent);
     }
 

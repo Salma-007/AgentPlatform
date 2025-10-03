@@ -18,6 +18,15 @@ public class Paiement {
 
     private String typePrime;
     private String typeIndemnite;
+
+    public boolean isConditionValidee() {
+        return conditionValidee;
+    }
+
+    public void setConditionValidee(boolean conditionValidee) {
+        this.conditionValidee = conditionValidee;
+    }
+
     private boolean conditionValidee;
 
 

@@ -2,6 +2,7 @@ package controller;
 
 import enums.TypeAgent;
 import exception.AgentNotFoundException;
+import exception.DepartementNotFoundException;
 import model.Agent;
 import model.Departement;
 import service.AgentServiceImp;
@@ -84,7 +85,7 @@ public class AgentController {
         return agents;
     }
 
-    public void modifierAgent(int id, String nom, String prenom, String email, String motDePasse, Departement departement, TypeAgent type){
+    public void modifierAgent(int id, String nom, String prenom, String email, String motDePasse, Departement departement, TypeAgent type) throws DepartementNotFoundException {
         Agent ag = new Agent(id, nom, prenom, email, motDePasse, departement, type);
         service.modification(ag);
     }

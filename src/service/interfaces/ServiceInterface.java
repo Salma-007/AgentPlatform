@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ServiceInterface<T> {
     void ajout(T entity) throws SQLException;
-    void modification(T entity);
+    void modification(T entity) throws DepartementNotFoundException;
     void suppression(T entity);
     List<T> retrieveAll();
     T findById(int id) throws SQLException, DepartementNotFoundException;

@@ -1,6 +1,7 @@
 package service;
 
 import exception.DepartementNotFoundException;
+import exception.DepartmentExceptionAlreadyExists;
 import model.Agent;
 import model.Departement;
 import repository.DepartementRepository;
@@ -18,7 +19,11 @@ public class DepartementServiceImp implements DepartementService {
 
     @Override
     public void ajout(Departement departement) {
-        repo.createDepartement(departement);
+        Departement existant = repo.getDepartementByName(departement.getNom());
+
+        if (existant != null) {
+            throw new DepartmentExceptionAlreadyExists("⚠️ Un département avec le nom '" + departement.getNom() + "' existe déjà !");
+        }
     }
 
     @Override

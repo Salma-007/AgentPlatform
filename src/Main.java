@@ -40,11 +40,12 @@ public class Main {
         AgentServiceImp agentService = new AgentServiceImp(agentRepo, deptRepo, paiementService);
         AuthenticationService authService = new AuthenticationServiceImp(authRepo, agentRepo);
         DepartementServiceImp departementService = new DepartementServiceImp(deptRepo);
+        StatisticsServiceImp statesService = new StatisticsServiceImp(paiementService);
 
         // Controller Layer
         PaiementController paiementController = new PaiementController(paiementService);
         AgentController controller = new AgentController(agentService, authService);
-        DepartementController depcontroller = new DepartementController(departementService);
+        DepartementController depcontroller = new DepartementController(departementService, statesService);
 
         // View Layer
         menuAgent view = new menuAgent(controller, depcontroller,paiementController);
@@ -92,7 +93,6 @@ public class Main {
                 default:
                     System.out.println("Type d'agent inconnu !");
             }
-
             System.out.println("\nRetour à l'écran de connexion...\n");
         }
 

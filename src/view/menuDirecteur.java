@@ -45,6 +45,7 @@ public class menuDirecteur {
             System.out.println("7. Valider un paiement");
             System.out.println("8. Afficher tous les agents ");
             System.out.println("9. Ajouter un responsable ");
+            System.out.println("10. Afficher total paiement par departement ");
             System.out.println("0. Retour / Quitter");
             System.out.print("Votre choix : ");
 
@@ -77,6 +78,9 @@ public class menuDirecteur {
                     break;
                 case "9":
                     ajouterResponsable();
+                    break;
+                case "10":
+                    totalParDepartement();
                     break;
                 case "0":
                     running = false;
@@ -173,29 +177,46 @@ public class menuDirecteur {
     }
 
     private void getDepartementById() {
-        System.out.print("ID du département : ");
-        int id = Integer.parseInt(scanner.nextLine());
         try {
+            System.out.print("ID du département : ");
+            int id = Integer.parseInt(scanner.nextLine().trim());
             depController.getDepId(id);
+        } catch (NumberFormatException e) {
+            System.out.println("⚠️ Veuillez entrer un nombre valide !");
         } catch (DepartementNotFoundException e) {
             System.out.println("Erreur : " + e.getMessage());
         }
     }
 
-    public void validPaiement(){
-        System.out.print("ID du paiement : ");
-        int id = Integer.parseInt(scanner.nextLine());
+    private void totalParDepartement(){
         try {
-            paiementcontroller.retrieveInvalidePayments()
-                    .stream()
-                    .filter(p-> p.getIdPaiement()== id)
-                    .findFirst()
-                    .ifPresentOrElse(p-> paiementcontroller.validatePayment(p),
-                    ()-> {throw new PaymentNotFoundException("payment not found!");});
-        } catch (PaymentNotFoundException e) {
+            System.out.print("ID du département : ");
+            int id = Integer.parseInt(scanner.nextLine().trim());
+            depController.getTotalPaiementPerDepartment(id);
+        } catch (NumberFormatException e) {
+            System.out.println("⚠️ Veuillez entrer un nombre valide !");
+        } catch (DepartementNotFoundException e) {
             System.out.println("Erreur : " + e.getMessage());
         }
     }
+
+    private void validPaiement() {
+        try {
+            System.out.print("ID du paiement : ");
+            int id = Integer.parseInt(scanner.nextLine().trim());
+
+            paiementcontroller.validatePaymentById(id);
+            System.out.println(" Paiement validé avec succès !");
+
+        } catch (NumberFormatException e) {
+            System.out.println(" Veuillez entrer un nombre valide !");
+        } catch (PaymentNotFoundException e) {
+            System.out.println(" Erreur : " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println(" Une erreur est survenue : " + e.getMessage());
+        }
+    }
+
 
     private void listAgentsByDepartement() {
         System.out.print("Nom du département : ");
